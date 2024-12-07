@@ -47,11 +47,7 @@
                                 : undefined}
                         >
                             {@html title}
-                            <img
-                                class="stroke-current"
-                                src={icon}
-                                alt={title}
-                            />
+                            <img src={icon} alt={title} />
                         </a>
                     </li>
                 {/each}
@@ -64,13 +60,13 @@
             on:click={toggleMenu}
         >
             <div
-                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
+                class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
             />
             <div
-                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
+                class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
             />
             <div
-                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
+                class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
             />
         </button>
     </div>
