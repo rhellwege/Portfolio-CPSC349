@@ -30,7 +30,7 @@
 
         <section class="nav-links transition-all duration-300">
             <ul
-                class={`pages flex-col md:flex-row md:space-x-4 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-5" : "closed  md:flex"}`}
+                class={`pages flex-col md:flex-row md:space-x-4 mr-3 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-5" : "closed  md:flex"}`}
             >
                 {#each navItems as { title, path } (path)}
                     <li class="md:mr-5">
