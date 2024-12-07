@@ -1,25 +1,29 @@
-FROM node:18 AS build
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
+COPY pnpm-lock.yaml .
 
-# Install dependencies with verbose output
-RUN npm install
+RUN npm i -g pnpm
+RUN pnpm install
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
+RUN pnpm prune --prod
 
-FROM node:18 AS production
+FROM node:22-alpine AS deployer
 
 WORKDIR /app
 
-COPY --from=build /app/build ./build
-COPY --from=build /app/package*.json ./
+COPY --from=builder /app/build build/
+COPY --from=builder /app/package.json .
 
-RUN npm install --production
+RUN npm install -g serve
 
 EXPOSE 3000
 
-CMD ["node", "./build/index.js"]
+ENV NODE_ENV=production
+
+CMD [ "serve", "build" ]
