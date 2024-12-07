@@ -3,11 +3,11 @@
     import { onMount } from "svelte";
 
     const navItems = [
-        { title: "Home", path: "/" },
-        { title: "About", path: "/about" },
-        { title: "Projects", path: "/projects" },
-        { title: "Contact", path: "/contact" },
-        { title: "Skills", path: "/skills" },
+        { title: "Home", path: "/", icon: "/icons/house.svg" },
+        { title: "About", path: "/about", icon: "/icons/info.svg" },
+        { title: "Projects", path: "/projects", icon: "/icons/dices.svg" },
+        { title: "Contact", path: "/contact", icon: "/icons/contact.svg" },
+        { title: "Skills", path: "/skills", icon: "/icons/wand-sparkles.svg" },
     ];
 
     let isOpen = false;
@@ -34,10 +34,10 @@
 
         <section class="nav-links transition-all duration-300">
             <ul
-                class={`pages flex-col md:flex-row md:space-x-4 mr-3 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-5" : "closed  md:flex"}`}
+                class={`pages flex-col md:flex-row md:space-x-4 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-5" : "closed  md:flex"}`}
             >
-                {#each navItems as { title, path } (path)}
-                    <li class="md:mr-5">
+                {#each navItems as { title, path, icon } (path)}
+                    <li class="md:mr-5 overflow-hidden">
                         <a
                             on:click={handleClose}
                             href={path}
@@ -47,6 +47,11 @@
                                 : undefined}
                         >
                             {@html title}
+                            <img
+                                class="stroke-current"
+                                src={icon}
+                                alt={title}
+                            />
                         </a>
                     </li>
                 {/each}
@@ -86,5 +91,8 @@
         .pages.closed {
             max-height: 0rem;
         }
+    }
+    .stroke-current {
+        stroke: currentColor;
     }
 </style>
