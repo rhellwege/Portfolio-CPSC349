@@ -37,9 +37,9 @@
     link="/projects/talkwithbooks"
 /> -->
 
-<ul>
+<ul class="flex flex-row justify-center gap-4">
     {#each projects as project}
-        <li>
+        <li class="">
             <Card
                 title={project.title}
                 summary={project.summary}
