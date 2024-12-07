@@ -7,3 +7,5 @@
 
 ## About the project:
 This project uses svelte for components and routing and tailwind for utility classes
+
+# Hosted at https://portfolio.rhellwege.xyz
