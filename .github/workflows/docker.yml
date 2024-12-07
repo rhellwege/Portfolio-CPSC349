@@ -1,0 +1,20 @@
+name: Update and Restart Docker Compose
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-and-restart:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Stop existing containers
+        run: sudo docker-compose down
+
+      - name: Start containers
+        run: sudo docker-compose up -d
