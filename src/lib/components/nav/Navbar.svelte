@@ -47,7 +47,7 @@
                                 : undefined}
                         >
                             {@html title}
-                            <img src={icon} alt={title} />
+                            <img class="icon" src={icon} alt={title} />
                         </a>
                     </li>
                 {/each}
@@ -88,7 +88,19 @@
             max-height: 0rem;
         }
     }
-    .stroke-current {
-        stroke: currentColor;
+    @media (max-width: 460px) {
+        img {
+            visibility: hidden;
+        }
+    }
+    @media (min-width: 768px) {
+        img {
+            visibility: hidden;
+        }
+    }
+    @media (min-width: 1024px) {
+        img {
+            visibility: visible;
+        }
     }
 </style>
