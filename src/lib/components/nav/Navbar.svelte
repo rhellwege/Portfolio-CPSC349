@@ -22,10 +22,14 @@
     }
 </script>
 
-<nav class="bg-white shadow-md">
+<nav class="bg-base-100 shadow-md">
     <div class="container mx-auto flex justify-between items-center p-4">
         <div class="flex-grow">
-            <h1 class="text-lg font-bold">Ryan Hellwege Portfolio</h1>
+            <a
+                href="/"
+                class="btn-ghost text-lg font-bold"
+                on:click={handleClose}>Ryan Hellwege Portfolio</a
+            >
         </div>
 
         <section class="nav-links transition-all duration-300">
@@ -37,7 +41,7 @@
                         <a
                             on:click={handleClose}
                             href={path}
-                            class={`text-gray-700 hover:shadow-lg hover:text-blue-500 ${path === $page.url.pathname ? "font-bold text-blue-500" : ""}`}
+                            class={`btn btn-ghost hover:shadow-lg hover:text- ${path === $page.url.pathname ? "font-bold text-primary" : ""}`}
                             aria-current={path === $page.url.pathname
                                 ? "page"
                                 : undefined}
@@ -55,13 +59,13 @@
             on:click={toggleMenu}
         >
             <div
-                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
+                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
             />
             <div
-                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
+                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
             />
             <div
-                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
+                class={`menuLine w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
             />
         </button>
     </div>
