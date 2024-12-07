@@ -20,6 +20,24 @@
             tags: ["Nim", "Synth", "GUI", "Music"],
             github: "https://github.com/rhellwege/Synnim",
         },
+        {
+            title: "AI Waste Recognition",
+            summary:
+                "A self-trained image classification model that classifies images as recyclable or waste. Has an interactive interface for live training and inference.",
+            preview: "/project-previews/aiwasterecognition.png",
+            link: "/projects/aiwasterecognition",
+            tags: ["Python", "AI", "Interactive", "Web"],
+            github: "https://github.com/rhellwege/AiWasteRecognition",
+        },
+        {
+            title: "TalkWithBooks",
+            summary:
+                "A personalized RAG for retrieveing documents and answering questiong (WIP)",
+            preview: "/project-previews/twb.png",
+            link: "/projects/talkwithbooks",
+            tags: ["Python", "AI", "Interactive", "Web", "WIP"],
+            github: "https://github.com/rhellwege/TalkWithBooks",
+        },
     ];
 </script>
 
@@ -29,15 +47,7 @@
 
 <h1 class="text-5xl text-bold">Projects</h1>
 
-<!-- <Card
-    title="hello"
-    summary="this is a summary"
-    preview="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
-    tags={["spiderman"]}
-    link="/projects/talkwithbooks"
-/> -->
-
-<ul class="flex flex-row justify-center gap-4">
+<ul class="flex flex-row flex-wrap justify-center align-text-bottom gap-9">
     {#each projects as project}
         <li class="">
             <Card
