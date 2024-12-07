@@ -1,7 +1,7 @@
 <script lang="ts">
     import { preloadData } from "$app/navigation";
     import { onMount } from "svelte";
-    import Navbar from "$lib/components/nav/navbar.svelte";
+    import Navbar from "$lib/components/nav/Navbar.svelte";
     import "../app.css";
 </script>
 

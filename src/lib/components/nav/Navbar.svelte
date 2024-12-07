@@ -2,9 +2,6 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
 
-    let jsEnabled = false;
-    onMount(() => (jsEnabled = true));
-
     const navItems = [
         { title: "Home", path: "/" },
         { title: "About", path: "/about" },
@@ -13,15 +10,15 @@
         { title: "Skills", path: "/skills" },
     ];
 
-    let isOpen = false; // Reactive variable to manage the menu state
+    let isOpen = false;
 
     function toggleMenu() {
-        isOpen = !isOpen; // Toggle the menu state
+        isOpen = !isOpen;
     }
 
     function handleClose(ev: Event) {
         ev.stopPropagation();
-        isOpen = false; // Close the menu
+        isOpen = false;
     }
 </script>
 
@@ -33,7 +30,7 @@
 
         <section class="nav-links transition-all duration-300">
             <ul
-                class={`pages flex-col md:flex-row md:space-x-4 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-4" : "closed  md:flex"}`}
+                class={`pages flex-col md:flex-row md:space-x-4 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-5" : "closed  md:flex"}`}
             >
                 {#each navItems as { title, path } (path)}
                     <li class="md:mr-5">
@@ -52,9 +49,8 @@
             </ul>
         </section>
 
-        <label
-            for="navToggle"
-            class="menu cursor-pointer flex flex-col gap-1 md:hidden duration-100"
+        <button
+            class="menu cursor-pointer flex flex-col gap-1 md:hidden"
             aria-label="Toggle navigation"
             on:click={toggleMenu}
         >
@@ -67,7 +63,7 @@
             <div
                 class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
             />
-        </label>
+        </button>
     </div>
 </nav>
 
@@ -80,11 +76,11 @@
     .pages {
         transition: max-height 0.3s ease;
         overflow: hidden;
-    }
-    .pages.open {
         max-height: 40rem;
     }
-    .pages.closed {
-        max-height: 0rem;
+    @media (max-width: 768px) {
+        .pages.closed {
+            max-height: 0rem;
+        }
     }
 </style>
