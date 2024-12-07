@@ -31,17 +31,16 @@
             <h1 class="text-lg font-bold">Ryan Hellwege Portfolio</h1>
         </div>
 
-        <section class="nav-links">
+        <section class="nav-links transition-all duration-300">
             <ul
-                class={`pages flex-col md:flex-row md:space-x-4 ${isOpen ? "flex mr-4" : "hidden"} md:flex`}
+                class={`pages flex-col md:flex-row md:space-x-4 transition-all duration-300 ${isOpen ? "open gap-4 flex mr-4" : "closed  md:flex"}`}
             >
                 {#each navItems as { title, path } (path)}
                     <li class="md:mr-5">
-                        <!-- Add margin to the right for spacing -->
                         <a
                             on:click={handleClose}
                             href={path}
-                            class={`text-gray-700 hover:text-blue-500 ${path === $page.url.pathname ? "font-bold text-blue-500" : ""}`}
+                            class={`text-gray-700 hover:shadow-lg hover:text-blue-500 ${path === $page.url.pathname ? "font-bold text-blue-500" : ""}`}
                             aria-current={path === $page.url.pathname
                                 ? "page"
                                 : undefined}
@@ -55,35 +54,37 @@
 
         <label
             for="navToggle"
-            class="menu cursor-pointer flex flex-col gap-1 md:hidden"
+            class="menu cursor-pointer flex flex-col gap-1 md:hidden duration-100"
             aria-label="Toggle navigation"
             on:click={toggleMenu}
         >
-            {#if isOpen}
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300 transform rotate-45"
-                />
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300 opacity-0"
-                />
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300 transform -rotate-45"
-                />
-            {:else}
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300"
-                />
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300"
-                />
-                <div
-                    class="menuLine w-6 h-1 bg-black transition-all duration-300"
-                />
-            {/if}
+            <div
+                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
+            />
+            <div
+                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
+            />
+            <div
+                class={`menuLine w-6 h-1 bg-black transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
+            />
         </label>
     </div>
 </nav>
 
 <style>
-    /* Additional styles can be added here if needed */
+    nav {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+    .pages {
+        transition: max-height 0.3s ease;
+        overflow: hidden;
+    }
+    .pages.open {
+        max-height: 40rem;
+    }
+    .pages.closed {
+        max-height: 0rem;
+    }
 </style>

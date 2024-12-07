@@ -6,7 +6,7 @@
 </script>
 
 <Navbar />
-<main><slot /></main>
+<main class="bg-slate-50"><slot /></main>
 
 <svelte:head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,9 +15,5 @@
 <style>
     main {
         min-height: 100vh;
-    }
-
-    main {
-        background-color: var(--acm-odd);
     }
 </style>
