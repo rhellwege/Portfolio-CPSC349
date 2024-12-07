@@ -27,7 +27,7 @@
         <div class="flex-grow">
             <a
                 href="/"
-                class="btn-ghost text-lg font-bold"
+                class="btn-ghost text-xl font-bold"
                 on:click={handleClose}>Ryan Hellwege Portfolio</a
             >
         </div>
@@ -41,7 +41,7 @@
                         <a
                             on:click={handleClose}
                             href={path}
-                            class={`btn btn-ghost hover:shadow-lg hover:text- ${path === $page.url.pathname ? "font-bold text-primary" : ""}`}
+                            class={`btn btn-ghost text-lg hover:shadow-lg ${path === $page.url.pathname ? "font-bold text-primary" : ""}`}
                             aria-current={path === $page.url.pathname
                                 ? "page"
                                 : undefined}
