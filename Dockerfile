@@ -20,8 +20,10 @@ WORKDIR /app
 COPY --from=builder /app/build build/
 COPY --from=builder /app/package.json .
 
-EXPOSE 4173
+RUN npm install -g serve
+
+EXPOSE 3000
 
 ENV NODE_ENV=production
 
-CMD [ "npm", "run", "preview" ]
+CMD [ "serve", "build" ]
