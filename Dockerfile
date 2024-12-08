@@ -16,4 +16,4 @@ EXPOSE 4173
 
 ENV NODE_ENV=production
 
-CMD [ "pnpm", "run", "preview" ]
+CMD [ "pnpm", "run", "preview", "--host"]
