@@ -27,7 +27,7 @@ var Module = typeof Module != 'undefined' ? Module : {};
     if (Module['ENVIRONMENT_IS_PTHREAD'] || Module['$ww']) return;
     var loadPackage = function(metadata) {
 
-      var PACKAGE_PATH = '';
+      var PACKAGE_PATH = '/project-media/synnim-wasm/index.data';
       if (typeof window === 'object') {
         PACKAGE_PATH = window['encodeURIComponent'](window.location.pathname.toString().substring(0, window.location.pathname.toString().lastIndexOf('/')) + '/');
       } else if (typeof process === 'undefined' && typeof location !== 'undefined') {
