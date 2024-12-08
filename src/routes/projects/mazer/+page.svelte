@@ -6,7 +6,6 @@
 </svelte:head>
 
 <h1>Mazer</h1>
-<p></p>
 
 <style>
 </style>
