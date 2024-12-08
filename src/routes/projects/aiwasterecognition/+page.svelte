@@ -5,8 +5,24 @@
     <title>Ryan Hellwege Portfolio | AI Waste Recognition</title>
 </svelte:head>
 
-<h1>AI Waste Recognition</h1>
-<p></p>
+<div id="main" class="mx-auto">
+    <h1 id="title" class="font-bold text-5xl text-center py-5">
+        AI Waste Recognition
+    </h1>
+</div>
 
 <style>
+    @font-face {
+        font-family: "Bokor";
+        src: url("/fonts/Bokor-Regular.ttf");
+        font-weight: normal;
+        font-style: normal;
+        font-weight: 400;
+    }
+    #title {
+        font-family: "Bokor";
+    }
+    #main {
+        width: 80vw;
+    }
 </style>

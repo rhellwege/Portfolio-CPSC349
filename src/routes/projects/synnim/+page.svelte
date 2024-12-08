@@ -6,9 +6,9 @@
     <title>Ryan Hellwege Portfolio | Synnim</title>
 </svelte:head>
 
-<div class="px-10">
-    <h1 class="font-bold text-3xl p-5">Synnim</h1>
-    <h2 class="font-bold text-lg p2">Browser Demo</h2>
+<div id="main" class="mx-auto">
+    <h1 id="title" class="font-bold text-5xl text-center py-5">Synnim</h1>
+    <h2 class="font-bold text-lg mb-2">Browser Demo</h2>
     <div class="content flex flex-col justify-center align-center">
         <iframe
             title="synnim-wasm"
@@ -104,6 +104,19 @@
     iframe {
         width: 800px;
         height: 450px;
+    }
+    @font-face {
+        font-family: "Membra";
+        src: url("/fonts/membra.ttf");
+        font-weight: normal;
+        font-style: normal;
+        font-weight: 400;
+    }
+    #title {
+        font-family: "Membra";
+    }
+    #main {
+        width: 80vw;
     }
     #small-device {
         visibility: hidden;
