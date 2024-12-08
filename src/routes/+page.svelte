@@ -5,8 +5,8 @@
     <title>Ryan Hellwege Portfolio | Home</title>
 </svelte:head>
 
-<div class="hero bg-base-200 min-h-screen">
-    <div class="hero-content flex-col lg:flex-row-reverse">
+<div id="main" class="hero bg-base-200 min-h-screen mx-auto">
+    <div class="hero-content glass p-6 rounded flex-col lg:flex-row-reverse">
         <img
             src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
             alt="profile"
@@ -14,15 +14,29 @@
         />
         <div>
             <h1 class="text-5xl font-bold">Ryan Hellwege</h1>
-            <p class="py-6">
-                Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                assumenda excepturi exercitationem quasi. In deleniti eaque aut
-                repudiandae et a id nisi.
+            <p id="bio" class="py-6">
+                I am a fourth year California State University Computer Science
+                student. My specialty is backend and fullstack development.
+                Programmng is a passion of mine and I have been it for 9 years
+                since I was 13.
             </p>
-            <button class="btn btn-primary">Get Started</button>
+            <div class="join">
+                <a href="/contact" class="btn btn-primary join-item"
+                    >Get in Contact</a
+                ><a href="/contact" class="btn btn-secondary join-item"
+                    >More About Me</a
+                >
+            </div>
         </div>
     </div>
 </div>
 
 <style>
+    #main {
+        width: 100%;
+        background-image: url("/tortise-shell.svg");
+    }
+    #bio {
+        max-width: 600px;
+    }
 </style>
