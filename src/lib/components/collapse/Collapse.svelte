@@ -1,5 +1,9 @@
 <script>
     let { title } = $props();
+
+    function stopPropagation(event) {
+        event.stopPropagation();
+    }
 </script>
 
 <div
@@ -10,6 +14,6 @@
         {title}
     </div>
     <div class="collapse-content">
-        <div><slot /></div>
+        <div onclick={stopPropagation}><slot /></div>
     </div>
 </div>
