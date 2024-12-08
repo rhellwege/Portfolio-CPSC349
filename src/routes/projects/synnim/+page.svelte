@@ -1,14 +1,5 @@
 <script>
     import Collapse from "$lib/components/collapse/Collapse.svelte";
-
-    let synthIframe;
-    // Function to resize the iframe based on the content height
-    function resizeIframe() {
-        if (synthIframe) {
-            synthIframe.style.height =
-                synthIframe.contentWindow.document.body.scrollHeight + "px";
-        }
-    }
 </script>
 
 <svelte:head>
@@ -22,8 +13,6 @@
         src="/project-media/synnim-wasm/index.html"
         frameborder="0"
         scrolling="no"
-        bind:this={synthIframe}
-        on:load={resizeIframe}
     >
         ></iframe
     >
