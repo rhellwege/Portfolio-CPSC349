@@ -35,7 +35,7 @@ var Module = typeof Module != 'undefined' ? Module : {};
         PACKAGE_PATH = encodeURIComponent(location.pathname.toString().substring(0, location.pathname.toString().lastIndexOf('/')) + '/');
       }
       var PACKAGE_NAME = 'public/index.data';
-      var REMOTE_PACKAGE_BASE = 'index.data';
+      var REMOTE_PACKAGE_BASE = '/project-media/synnim-wasm/index.data';
       if (typeof Module['locateFilePackage'] === 'function' && !Module['locateFile']) {
         Module['locateFile'] = Module['locateFilePackage'];
         err('warning: you defined Module.locateFilePackage, that has been renamed to Module.locateFile (using your locateFilePackage for now)');
@@ -203,12 +203,12 @@ Module['FS_createPath']("/resources", "styles", true, true);
     // it.
     if (Module['ENVIRONMENT_IS_PTHREAD'] || Module['$ww']) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  
+
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach(function(task) {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  
+
 
 // Sometimes an existing Module object exists with properties
 // meant to overwrite the default module functionality. Here
@@ -687,7 +687,7 @@ function initRuntime() {
 
   checkStackCookie();
 
-  
+
 if (!Module["noFSInit"] && !FS.init.initialized)
   FS.init();
 FS.ignorePermissions = false;
@@ -698,7 +698,7 @@ TTY.init();
 
 function preMain() {
   checkStackCookie();
-  
+
   callRuntimeCallbacks(__ATMAIN__);
 }
 
@@ -906,7 +906,7 @@ function createExportWrapper(name, fixedasm) {
 // include: runtime_exceptions.js
 // end include: runtime_exceptions.js
 var wasmBinaryFile;
-  wasmBinaryFile = 'index.wasm';
+  wasmBinaryFile = '/project-media/synnim-wasm/index.wasm';
   if (!isDataURI(wasmBinaryFile)) {
     wasmBinaryFile = locateFile(wasmBinaryFile);
   }
@@ -1186,16 +1186,16 @@ function dbg(text) {
 // === Body ===
 
 var ASM_CONSTS = {
-  121440: () => { if (typeof window === 'undefined' || (window.AudioContext || window.webkitAudioContext) === undefined) { return 0; } if (typeof(window.miniaudio) === 'undefined') { window.miniaudio = { referenceCount: 0 }; miniaudio.devices = []; miniaudio.track_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == null) { miniaudio.devices[iDevice] = device; return iDevice; } } miniaudio.devices.push(device); return miniaudio.devices.length - 1; }; miniaudio.untrack_device_by_index = function(deviceIndex) { miniaudio.devices[deviceIndex] = null; while (miniaudio.devices.length > 0) { if (miniaudio.devices[miniaudio.devices.length-1] == null) { miniaudio.devices.pop(); } else { break; } } }; miniaudio.untrack_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == device) { return miniaudio.untrack_device_by_index(iDevice); } } }; miniaudio.get_device_by_index = function(deviceIndex) { return miniaudio.devices[deviceIndex]; }; miniaudio.unlock_event_types = (function(){ return ['touchstart', 'touchend', 'click']; })(); miniaudio.unlock = function() { for(var i = 0; i < miniaudio.devices.length; ++i) { var device = miniaudio.devices[i]; if (device != null && device.webaudio != null && device.state === 2 ) { device.webaudio.resume(); } } miniaudio.unlock_event_types.map(function(event_type) { document.removeEventListener(event_type, miniaudio.unlock, true); }); }; miniaudio.unlock_event_types.map(function(event_type) { document.addEventListener(event_type, miniaudio.unlock, true); }); } window.miniaudio.referenceCount++; return 1; },  
- 123139: () => { if (typeof(window.miniaudio) !== 'undefined') { window.miniaudio.referenceCount--; if (window.miniaudio.referenceCount === 0) { delete window.miniaudio; } } },  
- 123300: () => { return (navigator.mediaDevices !== undefined && navigator.mediaDevices.getUserMedia !== undefined); },  
- 123404: () => { try { var temp = new (window.AudioContext || window.webkitAudioContext)(); var sampleRate = temp.sampleRate; temp.close(); return sampleRate; } catch(e) { return 0; } },  
- 123575: ($0, $1, $2, $3, $4, $5) => { var channels = $0; var sampleRate = $1; var bufferSize = $2; var isCapture = $3; var pDevice = $4; var pAllocationCallbacks = $5; if (typeof(window.miniaudio) === 'undefined') { return -1; } var device = {}; device.webaudio = new (window.AudioContext || window.webkitAudioContext)({sampleRate:sampleRate}); device.webaudio.suspend(); device.state = 1; device.intermediaryBufferSizeInBytes = channels * bufferSize * 4; device.intermediaryBuffer = _ma_malloc_emscripten(device.intermediaryBufferSizeInBytes, pAllocationCallbacks); device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); device.scriptNode = device.webaudio.createScriptProcessor(bufferSize, (isCapture) ? channels : 0, (isCapture) ? 0 : channels); if (isCapture) { device.scriptNode.onaudioprocess = function(e) { if (device.intermediaryBuffer === undefined) { return; } if (device.intermediaryBufferView.length == 0) { device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); } for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { e.outputBuffer.getChannelData(iChannel).fill(0.0); } var sendSilence = false; if (device.streamNode === undefined) { sendSilence = true; } if (e.inputBuffer.numberOfChannels != channels) { console.log("Capture: Channel count mismatch. " + e.inputBufer.numberOfChannels + " != " + channels + ". Sending silence."); sendSilence = true; } var totalFramesProcessed = 0; while (totalFramesProcessed < e.inputBuffer.length) { var framesRemaining = e.inputBuffer.length - totalFramesProcessed; var framesToProcess = framesRemaining; if (framesToProcess > (device.intermediaryBufferSizeInBytes/channels/4)) { framesToProcess = (device.intermediaryBufferSizeInBytes/channels/4); } if (sendSilence) { device.intermediaryBufferView.fill(0.0); } else { for (var iFrame = 0; iFrame < framesToProcess; ++iFrame) { for (var iChannel = 0; iChannel < e.inputBuffer.numberOfChannels; ++iChannel) { device.intermediaryBufferView[iFrame*channels + iChannel] = e.inputBuffer.getChannelData(iChannel)[totalFramesProcessed + iFrame]; } } } _ma_device_process_pcm_frames_capture__webaudio(pDevice, framesToProcess, device.intermediaryBuffer); totalFramesProcessed += framesToProcess; } }; navigator.mediaDevices.getUserMedia({audio:true, video:false}) .then(function(stream) { device.streamNode = device.webaudio.createMediaStreamSource(stream); device.streamNode.connect(device.scriptNode); device.scriptNode.connect(device.webaudio.destination); }) .catch(function(error) { device.scriptNode.connect(device.webaudio.destination); }); } else { device.scriptNode.onaudioprocess = function(e) { if (device.intermediaryBuffer === undefined) { return; } if(device.intermediaryBufferView.length == 0) { device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); } var outputSilence = false; if (e.outputBuffer.numberOfChannels != channels) { console.log("Playback: Channel count mismatch. " + e.outputBufer.numberOfChannels + " != " + channels + ". Outputting silence."); outputSilence = true; return; } var totalFramesProcessed = 0; while (totalFramesProcessed < e.outputBuffer.length) { var framesRemaining = e.outputBuffer.length - totalFramesProcessed; var framesToProcess = framesRemaining; if (framesToProcess > (device.intermediaryBufferSizeInBytes/channels/4)) { framesToProcess = (device.intermediaryBufferSizeInBytes/channels/4); } _ma_device_process_pcm_frames_playback__webaudio(pDevice, framesToProcess, device.intermediaryBuffer); if (outputSilence) { for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { e.outputBuffer.getChannelData(iChannel).fill(0.0); } } else { for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { var outputBuffer = e.outputBuffer.getChannelData(iChannel); var intermediaryBuffer = device.intermediaryBufferView; for (var iFrame = 0; iFrame < framesToProcess; ++iFrame) { outputBuffer[totalFramesProcessed + iFrame] = intermediaryBuffer[iFrame*channels + iChannel]; } } } totalFramesProcessed += framesToProcess; } }; device.scriptNode.connect(device.webaudio.destination); } return miniaudio.track_device(device); },  
- 127925: ($0) => { return miniaudio.get_device_by_index($0).webaudio.sampleRate; },  
- 127991: ($0, $1, $2, $3) => { var device = miniaudio.get_device_by_index($0); var pAllocationCallbacks = $3; if (device.scriptNode !== undefined) { device.scriptNode.onaudioprocess = function(e) {}; device.scriptNode.disconnect(); device.scriptNode = undefined; } if (device.streamNode !== undefined) { device.streamNode.disconnect(); device.streamNode = undefined; } device.webaudio.close(); device.webaudio = undefined; if (device.intermediaryBuffer !== undefined) { _ma_free_emscripten(device.intermediaryBuffer, pAllocationCallbacks); device.intermediaryBuffer = undefined; device.intermediaryBufferView = undefined; device.intermediaryBufferSizeInBytes = undefined; } miniaudio.untrack_device_by_index($0); },  
- 128677: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.resume(); device.state = 2; },  
- 128773: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.resume(); device.state = 2; },  
- 128869: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.suspend(); device.state = 1; },  
+  121440: () => { if (typeof window === 'undefined' || (window.AudioContext || window.webkitAudioContext) === undefined) { return 0; } if (typeof(window.miniaudio) === 'undefined') { window.miniaudio = { referenceCount: 0 }; miniaudio.devices = []; miniaudio.track_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == null) { miniaudio.devices[iDevice] = device; return iDevice; } } miniaudio.devices.push(device); return miniaudio.devices.length - 1; }; miniaudio.untrack_device_by_index = function(deviceIndex) { miniaudio.devices[deviceIndex] = null; while (miniaudio.devices.length > 0) { if (miniaudio.devices[miniaudio.devices.length-1] == null) { miniaudio.devices.pop(); } else { break; } } }; miniaudio.untrack_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == device) { return miniaudio.untrack_device_by_index(iDevice); } } }; miniaudio.get_device_by_index = function(deviceIndex) { return miniaudio.devices[deviceIndex]; }; miniaudio.unlock_event_types = (function(){ return ['touchstart', 'touchend', 'click']; })(); miniaudio.unlock = function() { for(var i = 0; i < miniaudio.devices.length; ++i) { var device = miniaudio.devices[i]; if (device != null && device.webaudio != null && device.state === 2 ) { device.webaudio.resume(); } } miniaudio.unlock_event_types.map(function(event_type) { document.removeEventListener(event_type, miniaudio.unlock, true); }); }; miniaudio.unlock_event_types.map(function(event_type) { document.addEventListener(event_type, miniaudio.unlock, true); }); } window.miniaudio.referenceCount++; return 1; },
+ 123139: () => { if (typeof(window.miniaudio) !== 'undefined') { window.miniaudio.referenceCount--; if (window.miniaudio.referenceCount === 0) { delete window.miniaudio; } } },
+ 123300: () => { return (navigator.mediaDevices !== undefined && navigator.mediaDevices.getUserMedia !== undefined); },
+ 123404: () => { try { var temp = new (window.AudioContext || window.webkitAudioContext)(); var sampleRate = temp.sampleRate; temp.close(); return sampleRate; } catch(e) { return 0; } },
+ 123575: ($0, $1, $2, $3, $4, $5) => { var channels = $0; var sampleRate = $1; var bufferSize = $2; var isCapture = $3; var pDevice = $4; var pAllocationCallbacks = $5; if (typeof(window.miniaudio) === 'undefined') { return -1; } var device = {}; device.webaudio = new (window.AudioContext || window.webkitAudioContext)({sampleRate:sampleRate}); device.webaudio.suspend(); device.state = 1; device.intermediaryBufferSizeInBytes = channels * bufferSize * 4; device.intermediaryBuffer = _ma_malloc_emscripten(device.intermediaryBufferSizeInBytes, pAllocationCallbacks); device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); device.scriptNode = device.webaudio.createScriptProcessor(bufferSize, (isCapture) ? channels : 0, (isCapture) ? 0 : channels); if (isCapture) { device.scriptNode.onaudioprocess = function(e) { if (device.intermediaryBuffer === undefined) { return; } if (device.intermediaryBufferView.length == 0) { device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); } for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { e.outputBuffer.getChannelData(iChannel).fill(0.0); } var sendSilence = false; if (device.streamNode === undefined) { sendSilence = true; } if (e.inputBuffer.numberOfChannels != channels) { console.log("Capture: Channel count mismatch. " + e.inputBufer.numberOfChannels + " != " + channels + ". Sending silence."); sendSilence = true; } var totalFramesProcessed = 0; while (totalFramesProcessed < e.inputBuffer.length) { var framesRemaining = e.inputBuffer.length - totalFramesProcessed; var framesToProcess = framesRemaining; if (framesToProcess > (device.intermediaryBufferSizeInBytes/channels/4)) { framesToProcess = (device.intermediaryBufferSizeInBytes/channels/4); } if (sendSilence) { device.intermediaryBufferView.fill(0.0); } else { for (var iFrame = 0; iFrame < framesToProcess; ++iFrame) { for (var iChannel = 0; iChannel < e.inputBuffer.numberOfChannels; ++iChannel) { device.intermediaryBufferView[iFrame*channels + iChannel] = e.inputBuffer.getChannelData(iChannel)[totalFramesProcessed + iFrame]; } } } _ma_device_process_pcm_frames_capture__webaudio(pDevice, framesToProcess, device.intermediaryBuffer); totalFramesProcessed += framesToProcess; } }; navigator.mediaDevices.getUserMedia({audio:true, video:false}) .then(function(stream) { device.streamNode = device.webaudio.createMediaStreamSource(stream); device.streamNode.connect(device.scriptNode); device.scriptNode.connect(device.webaudio.destination); }) .catch(function(error) { device.scriptNode.connect(device.webaudio.destination); }); } else { device.scriptNode.onaudioprocess = function(e) { if (device.intermediaryBuffer === undefined) { return; } if(device.intermediaryBufferView.length == 0) { device.intermediaryBufferView = new Float32Array(Module.HEAPF32.buffer, device.intermediaryBuffer, device.intermediaryBufferSizeInBytes); } var outputSilence = false; if (e.outputBuffer.numberOfChannels != channels) { console.log("Playback: Channel count mismatch. " + e.outputBufer.numberOfChannels + " != " + channels + ". Outputting silence."); outputSilence = true; return; } var totalFramesProcessed = 0; while (totalFramesProcessed < e.outputBuffer.length) { var framesRemaining = e.outputBuffer.length - totalFramesProcessed; var framesToProcess = framesRemaining; if (framesToProcess > (device.intermediaryBufferSizeInBytes/channels/4)) { framesToProcess = (device.intermediaryBufferSizeInBytes/channels/4); } _ma_device_process_pcm_frames_playback__webaudio(pDevice, framesToProcess, device.intermediaryBuffer); if (outputSilence) { for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { e.outputBuffer.getChannelData(iChannel).fill(0.0); } } else { for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { var outputBuffer = e.outputBuffer.getChannelData(iChannel); var intermediaryBuffer = device.intermediaryBufferView; for (var iFrame = 0; iFrame < framesToProcess; ++iFrame) { outputBuffer[totalFramesProcessed + iFrame] = intermediaryBuffer[iFrame*channels + iChannel]; } } } totalFramesProcessed += framesToProcess; } }; device.scriptNode.connect(device.webaudio.destination); } return miniaudio.track_device(device); },
+ 127925: ($0) => { return miniaudio.get_device_by_index($0).webaudio.sampleRate; },
+ 127991: ($0, $1, $2, $3) => { var device = miniaudio.get_device_by_index($0); var pAllocationCallbacks = $3; if (device.scriptNode !== undefined) { device.scriptNode.onaudioprocess = function(e) {}; device.scriptNode.disconnect(); device.scriptNode = undefined; } if (device.streamNode !== undefined) { device.streamNode.disconnect(); device.streamNode = undefined; } device.webaudio.close(); device.webaudio = undefined; if (device.intermediaryBuffer !== undefined) { _ma_free_emscripten(device.intermediaryBuffer, pAllocationCallbacks); device.intermediaryBuffer = undefined; device.intermediaryBufferView = undefined; device.intermediaryBufferSizeInBytes = undefined; } miniaudio.untrack_device_by_index($0); },
+ 128677: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.resume(); device.state = 2; },
+ 128773: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.resume(); device.state = 2; },
+ 128869: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.suspend(); device.state = 1; },
  128966: ($0) => { var device = miniaudio.get_device_by_index($0); device.webaudio.suspend(); device.state = 1; }
 };
 function GetCanvasWidth() { return canvas.clientWidth; }
@@ -1218,7 +1218,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
     };
 
-  
+
     /**
      * @param {number} ptr
      * @param {string} type
@@ -1243,7 +1243,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       return '0x' + ptr.toString(16).padStart(8, '0');
     };
 
-  
+
     /**
      * @param {number} ptr
      * @param {number} value
@@ -1274,7 +1274,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     };
 
   var UTF8Decoder = typeof TextDecoder != 'undefined' ? new TextDecoder('utf8') : undefined;
-  
+
     /**
      * Given a pointer 'idx' to a null-terminated UTF8-encoded string in the given
      * array that contains uint8 values, returns a copy of that string as a
@@ -1293,7 +1293,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // (As a tiny code save trick, compare endPtr against endIdx using a negation,
       // so that undefined means Infinity)
       while (heapOrArray[endPtr] && !(endPtr >= endIdx)) ++endPtr;
-  
+
       if (endPtr - idx > 16 && heapOrArray.buffer && UTF8Decoder) {
         return UTF8Decoder.decode(heapOrArray.subarray(idx, endPtr));
       }
@@ -1316,7 +1316,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           if ((u0 & 0xF8) != 0xF0) warnOnce('Invalid UTF-8 leading byte ' + ptrToString(u0) + ' encountered when deserializing a UTF-8 string in wasm memory to a JS string!');
           u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (heapOrArray[idx++] & 63);
         }
-  
+
         if (u0 < 0x10000) {
           str += String.fromCharCode(u0);
         } else {
@@ -1326,7 +1326,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return str;
     };
-  
+
     /**
      * Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the
      * emscripten HEAP, returns a copy of that string as a Javascript String object.
@@ -1354,7 +1354,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       HEAP32[((___errno_location())>>2)] = value;
       return value;
     };
-  
+
   var PATH = {isAbs:(path) => path.charAt(0) === '/',splitPath:(filename) => {
         var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
         return splitPathRe.exec(filename).slice(1);
@@ -1419,7 +1419,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },join2:(l, r) => {
         return PATH.normalize(l + '/' + r);
       }};
-  
+
   var initRandomFill = () => {
       if (typeof crypto == 'object' && typeof crypto['getRandomValues'] == 'function') {
         // for modern web browsers
@@ -1452,9 +1452,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // Lazily init on the first invocation.
       return (randomFill = initRandomFill())(view);
     };
-  
-  
-  
+
+
+
   var PATH_FS = {resolve:function() {
         var resolvedPath = '',
           resolvedAbsolute = false;
@@ -1505,8 +1505,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         outputParts = outputParts.concat(toParts.slice(samePartsLength));
         return outputParts.join('/');
       }};
-  
-  
+
+
   var lengthBytesUTF8 = (str) => {
       var len = 0;
       for (var i = 0; i < str.length; ++i) {
@@ -1527,14 +1527,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return len;
     };
-  
+
   var stringToUTF8Array = (str, heap, outIdx, maxBytesToWrite) => {
       assert(typeof str === 'string');
       // Parameter maxBytesToWrite is not optional. Negative values, 0, null,
       // undefined and false each don't write out any bytes.
       if (!(maxBytesToWrite > 0))
         return 0;
-  
+
       var startIdx = outIdx;
       var endIdx = outIdx + maxBytesToWrite - 1; // -1 for string null terminator.
       for (var i = 0; i < str.length; ++i) {
@@ -1583,7 +1583,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     if (dontAddNull) u8array.length = numBytesWritten;
     return u8array;
   }
-  
+
   var TTY = {ttys:[],init:function () {
         // https://github.com/emscripten-core/emscripten/pull/1555
         // if (ENVIRONMENT_IS_NODE) {
@@ -1664,7 +1664,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
               var BUFSIZE = 256;
               var buf = Buffer.alloc(BUFSIZE);
               var bytesRead = 0;
-  
+
               try {
                 bytesRead = fs.readSync(process.stdin.fd, buf, 0, BUFSIZE, -1);
               } catch(e) {
@@ -1673,7 +1673,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
                 if (e.toString().includes('EOF')) bytesRead = 0;
                 else throw e;
               }
-  
+
               if (bytesRead > 0) {
                 result = buf.slice(0, bytesRead).toString('utf-8');
               } else {
@@ -1743,13 +1743,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             tty.output = [];
           }
         }}};
-  
-  
+
+
   var zeroMemory = (address, size) => {
       HEAPU8.fill(0, address, address + size);
       return address;
     };
-  
+
   var alignMemory = (size, alignment) => {
       assert(alignment, "alignment argument is required");
       return Math.ceil(size / alignment) * alignment;
@@ -1828,7 +1828,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // When the byte data of the file is populated, this will point to either a typed array, or a normal JS array. Typed arrays are preferred
           // for performance, and used by default. However, typed arrays are not resizable like normal JS arrays are, so there is a small disk size
           // penalty involved for appending file writes that continuously grow a file similar to std::vector capacity vs used -scheme.
-          node.contents = null; 
+          node.contents = null;
         } else if (FS.isLink(node.mode)) {
           node.node_ops = MEMFS.ops_table.link.node;
           node.stream_ops = MEMFS.ops_table.link.stream;
@@ -1983,11 +1983,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           if (buffer.buffer === HEAP8.buffer) {
             canOwn = false;
           }
-  
+
           if (!length) return 0;
           var node = stream.node;
           node.timestamp = Date.now();
-  
+
           if (buffer.subarray && (!node.contents || node.contents.subarray)) { // This write is from a typed array to a typed array?
             if (canOwn) {
               assert(position === 0, 'canOwn must imply no weird position inside the file');
@@ -2003,7 +2003,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
               return length;
             }
           }
-  
+
           // Appending to an existing file and we need to reallocate, or source data did not come as a typed array.
           MEMFS.expandFileStorage(node, position+length);
           if (node.contents.subarray && buffer.subarray) {
@@ -2067,7 +2067,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // should we check if bytesWritten and length are the same?
           return 0;
         }}};
-  
+
   /** @param {boolean=} noRunDep */
   var asyncLoad = (url, onload, onerror, noRunDep) => {
       var dep = !noRunDep ? getUniqueRunDependency(`al ${url}`) : '';
@@ -2084,13 +2084,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       });
       if (dep) addRunDependency(dep);
     };
-  
-  
+
+
   var preloadPlugins = Module['preloadPlugins'] || [];
   function FS_handledByPreloadPlugin(byteArray, fullname, finish, onerror) {
       // Ensure plugins are ready.
       if (typeof Browser != 'undefined') Browser.init();
-  
+
       var handled = false;
       preloadPlugins.forEach(function(plugin) {
         if (handled) return;
@@ -2130,7 +2130,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         processData(url);
       }
     }
-  
+
   function FS_modeStringToFlags(str) {
       var flagModes = {
         'r': 0,
@@ -2146,21 +2146,21 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return flags;
     }
-  
+
   function FS_getMode(canRead, canWrite) {
       var mode = 0;
       if (canRead) mode |= 292 | 73;
       if (canWrite) mode |= 146;
       return mode;
     }
-  
-  
-  
-  
+
+
+
+
   var ERRNO_MESSAGES = {0:"Success",1:"Arg list too long",2:"Permission denied",3:"Address already in use",4:"Address not available",5:"Address family not supported by protocol family",6:"No more processes",7:"Socket already connected",8:"Bad file number",9:"Trying to read unreadable message",10:"Mount device busy",11:"Operation canceled",12:"No children",13:"Connection aborted",14:"Connection refused",15:"Connection reset by peer",16:"File locking deadlock error",17:"Destination address required",18:"Math arg out of domain of func",19:"Quota exceeded",20:"File exists",21:"Bad address",22:"File too large",23:"Host is unreachable",24:"Identifier removed",25:"Illegal byte sequence",26:"Connection already in progress",27:"Interrupted system call",28:"Invalid argument",29:"I/O error",30:"Socket is already connected",31:"Is a directory",32:"Too many symbolic links",33:"Too many open files",34:"Too many links",35:"Message too long",36:"Multihop attempted",37:"File or path name too long",38:"Network interface is not configured",39:"Connection reset by network",40:"Network is unreachable",41:"Too many open files in system",42:"No buffer space available",43:"No such device",44:"No such file or directory",45:"Exec format error",46:"No record locks available",47:"The link has been severed",48:"Not enough core",49:"No message of desired type",50:"Protocol not available",51:"No space left on device",52:"Function not implemented",53:"Socket is not connected",54:"Not a directory",55:"Directory not empty",56:"State not recoverable",57:"Socket operation on non-socket",59:"Not a typewriter",60:"No such device or address",61:"Value too large for defined data type",62:"Previous owner died",63:"Not super-user",64:"Broken pipe",65:"Protocol error",66:"Unknown protocol",67:"Protocol wrong type for socket",68:"Math result not representable",69:"Read only file system",70:"Illegal seek",71:"No such process",72:"Stale file handle",73:"Connection timed out",74:"Text file busy",75:"Cross-device link",100:"Device not a stream",101:"Bad font file fmt",102:"Invalid slot",103:"Invalid request code",104:"No anode",105:"Block device required",106:"Channel number out of range",107:"Level 3 halted",108:"Level 3 reset",109:"Link number out of range",110:"Protocol driver not attached",111:"No CSI structure available",112:"Level 2 halted",113:"Invalid exchange",114:"Invalid request descriptor",115:"Exchange full",116:"No data (for no delay io)",117:"Timer expired",118:"Out of streams resources",119:"Machine is not on the network",120:"Package not installed",121:"The object is remote",122:"Advertise error",123:"Srmount error",124:"Communication error on send",125:"Cross mount point (not really error)",126:"Given log. name not unique",127:"f.d. invalid for this operation",128:"Remote address changed",129:"Can   access a needed shared lib",130:"Accessing a corrupted shared lib",131:".lib section in a.out corrupted",132:"Attempting to link in too many libs",133:"Attempting to exec a shared library",135:"Streams pipe error",136:"Too many users",137:"Socket type not supported",138:"Not supported",139:"Protocol family not supported",140:"Can't send after socket shutdown",141:"Too many references",142:"Host is down",148:"No medium (in tape drive)",156:"Level 2 not synchronized"};
-  
+
   var ERRNO_CODES = {};
-  
+
   function demangle(func) {
       warnOnce('warning: build with -sDEMANGLE_SUPPORT to link in libcxxabi demangling');
       return func;
@@ -2176,43 +2176,43 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var FS = {root:null,mounts:[],devices:{},streams:[],nextInode:1,nameTable:null,currentPath:"/",initialized:false,ignorePermissions:true,ErrnoError:null,genericErrors:{},filesystems:null,syncFSRequests:0,lookupPath:(path, opts = {}) => {
         path = PATH_FS.resolve(path);
-  
+
         if (!path) return { path: '', node: null };
-  
+
         var defaults = {
           follow_mount: true,
           recurse_count: 0
         };
         opts = Object.assign(defaults, opts)
-  
+
         if (opts.recurse_count > 8) {  // max recursive lookup of 8
           throw new FS.ErrnoError(32);
         }
-  
+
         // split the absolute path
         var parts = path.split('/').filter((p) => !!p);
-  
+
         // start at the root
         var current = FS.root;
         var current_path = '/';
-  
+
         for (var i = 0; i < parts.length; i++) {
           var islast = (i === parts.length-1);
           if (islast && opts.parent) {
             // stop resolving
             break;
           }
-  
+
           current = FS.lookupNode(current, parts[i]);
           current_path = PATH.join2(current_path, parts[i]);
-  
+
           // jump to the mount's root node if this is a mountpoint
           if (FS.isMountpoint(current)) {
             if (!islast || (islast && opts.follow_mount)) {
               current = current.mounted.root;
             }
           }
-  
+
           // by default, lookupPath will not follow a symlink if it is the final path component.
           // setting opts.follow = true will override this behavior.
           if (!islast || opts.follow) {
@@ -2220,17 +2220,17 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             while (FS.isLink(current.mode)) {
               var link = FS.readlink(current_path);
               current_path = PATH_FS.resolve(PATH.dirname(current_path), link);
-  
+
               var lookup = FS.lookupPath(current_path, { recurse_count: opts.recurse_count + 1 });
               current = lookup.node;
-  
+
               if (count++ > 40) {  // limit max consecutive symlinks to 40 (SYMLOOP_MAX).
                 throw new FS.ErrnoError(32);
               }
             }
           }
         }
-  
+
         return { path: current_path, node: current };
       },getPath:(node) => {
         var path;
@@ -2245,7 +2245,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       },hashName:(parentid, name) => {
         var hash = 0;
-  
+
         for (var i = 0; i < name.length; i++) {
           hash = ((hash << 5) - hash + name.charCodeAt(i)) | 0;
         }
@@ -2285,9 +2285,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },createNode:(parent, name, mode, rdev) => {
         assert(typeof parent == 'object')
         var node = new FS.FSNode(parent, name, mode, rdev);
-  
+
         FS.hashAddNode(node);
-  
+
         return node;
       },destroyNode:(node) => {
         FS.hashRemoveNode(node);
@@ -2454,37 +2454,37 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },getDevice:(dev) => FS.devices[dev],getMounts:(mount) => {
         var mounts = [];
         var check = [mount];
-  
+
         while (check.length) {
           var m = check.pop();
-  
+
           mounts.push(m);
-  
+
           check.push.apply(check, m.mounts);
         }
-  
+
         return mounts;
       },syncfs:(populate, callback) => {
         if (typeof populate == 'function') {
           callback = populate;
           populate = false;
         }
-  
+
         FS.syncFSRequests++;
-  
+
         if (FS.syncFSRequests > 1) {
           err(`warning: ${FS.syncFSRequests} FS.syncfs operations in flight at once, probably just doing extra work`);
         }
-  
+
         var mounts = FS.getMounts(FS.root.mount);
         var completed = 0;
-  
+
         function doCallback(errCode) {
           assert(FS.syncFSRequests > 0);
           FS.syncFSRequests--;
           return callback(errCode);
         }
-  
+
         function done(errCode) {
           if (errCode) {
             if (!done.errored) {
@@ -2497,7 +2497,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             doCallback(null);
           }
         };
-  
+
         // sync all mounts
         mounts.forEach((mount) => {
           if (!mount.type.syncfs) {
@@ -2514,78 +2514,78 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         var root = mountpoint === '/';
         var pseudo = !mountpoint;
         var node;
-  
+
         if (root && FS.root) {
           throw new FS.ErrnoError(10);
         } else if (!root && !pseudo) {
           var lookup = FS.lookupPath(mountpoint, { follow_mount: false });
-  
+
           mountpoint = lookup.path;  // use the absolute path
           node = lookup.node;
-  
+
           if (FS.isMountpoint(node)) {
             throw new FS.ErrnoError(10);
           }
-  
+
           if (!FS.isDir(node.mode)) {
             throw new FS.ErrnoError(54);
           }
         }
-  
+
         var mount = {
           type,
           opts,
           mountpoint,
           mounts: []
         };
-  
+
         // create a root node for the fs
         var mountRoot = type.mount(mount);
         mountRoot.mount = mount;
         mount.root = mountRoot;
-  
+
         if (root) {
           FS.root = mountRoot;
         } else if (node) {
           // set as a mountpoint
           node.mounted = mount;
-  
+
           // add the new mount to the current mount's children
           if (node.mount) {
             node.mount.mounts.push(mount);
           }
         }
-  
+
         return mountRoot;
       },unmount:(mountpoint) => {
         var lookup = FS.lookupPath(mountpoint, { follow_mount: false });
-  
+
         if (!FS.isMountpoint(lookup.node)) {
           throw new FS.ErrnoError(28);
         }
-  
+
         // destroy the nodes for this mount, and all its child mounts
         var node = lookup.node;
         var mount = node.mounted;
         var mounts = FS.getMounts(mount);
-  
+
         Object.keys(FS.nameTable).forEach((hash) => {
           var current = FS.nameTable[hash];
-  
+
           while (current) {
             var next = current.name_next;
-  
+
             if (mounts.includes(current.mount)) {
               FS.destroyNode(current);
             }
-  
+
             current = next;
           }
         });
-  
+
         // no longer a mountpoint
         node.mounted = null;
-  
+
         // remove this mount from the child mounts
         var idx = node.mount.mounts.indexOf(mount);
         assert(idx !== -1);
@@ -2661,13 +2661,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         var new_name = PATH.basename(new_path);
         // parents must exist
         var lookup, old_dir, new_dir;
-  
+
         // let the errors from non existant directories percolate up
         lookup = FS.lookupPath(old_path, { parent: true });
         old_dir = lookup.node;
         lookup = FS.lookupPath(new_path, { parent: true });
         new_dir = lookup.node;
-  
+
         if (!old_dir || !new_dir) throw new FS.ErrnoError(44);
         // need to be part of the same mount
         if (old_dir.mount !== new_dir.mount) {
@@ -2949,7 +2949,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
         // we've already handled these, don't pass down to the underlying vfs
         flags &= ~(128 | 512 | 131072);
-  
+
         // register the stream with the filesystem
         var stream = FS.createStream({
           node,
@@ -3212,7 +3212,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         // TODO deprecate the old functionality of a single
         // input / output callback and that utilizes FS.createDevice
         // and instead require a unique set of stream ops
-  
+
         // by default, we symlink the standard streams to the
         // default tty devices. however, if the standard streams
         // have been overwritten we create a unique device for
@@ -3232,7 +3232,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else {
           FS.symlink('/dev/tty1', '/dev/stderr');
         }
-  
+
         // open default streams for the stdin, stdout and stderr devices
         var stdin = FS.open('/dev/stdin', 0);
         var stdout = FS.open('/dev/stdout', 1);
@@ -3262,7 +3262,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           };
           this.setErrno(errno);
           this.message = ERRNO_MESSAGES[errno];
-  
+
           // Try to get a maximally helpful stack trace. On Node.js, getting Error.stack
           // now ensures it shows what we want.
           if (this.stack) {
@@ -3280,29 +3280,29 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         });
       },staticInit:() => {
         FS.ensureErrnoError();
-  
+
         FS.nameTable = new Array(4096);
-  
+
         FS.mount(MEMFS, {}, '/');
-  
+
         FS.createDefaultDirectories();
         FS.createDefaultDevices();
         FS.createSpecialDirectories();
-  
+
         FS.filesystems = {
           'MEMFS': MEMFS,
         };
       },init:(input, output, error) => {
         assert(!FS.init.initialized, 'FS.init was previously called. If you want to initialize later with custom parameters, remove any earlier calls (note that one is automatically added to the generated code)');
         FS.init.initialized = true;
-  
+
         FS.ensureErrnoError();
-  
+
         // Allow Module.stdin etc. to provide defaults, if none explicitly passed to us here
         Module['stdin'] = input || Module['stdin'];
         Module['stdout'] = output || Module['stdout'];
         Module['stderr'] = error || Module['stderr'];
-  
+
         FS.createStandardStreams();
       },quit:() => {
         FS.init.initialized = false;
@@ -3488,27 +3488,27 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           var header;
           var hasByteServing = (header = xhr.getResponseHeader("Accept-Ranges")) && header === "bytes";
           var usesGzip = (header = xhr.getResponseHeader("Content-Encoding")) && header === "gzip";
-  
+
           var chunkSize = 1024*1024; // Chunk size in bytes
-  
+
           if (!hasByteServing) chunkSize = datalength;
-  
+
           // Function to get a range from the remote URL.
           var doXHR = (from, to) => {
             if (from > to) throw new Error("invalid range (" + from + ", " + to + ") or no bytes requested!");
             if (to > datalength-1) throw new Error("only " + datalength + " bytes available! programmer error!");
-  
+
             // TODO: Use mozResponseArrayBuffer, responseStream, etc. if available.
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, false);
             if (datalength !== chunkSize) xhr.setRequestHeader("Range", "bytes=" + from + "-" + to);
-  
+
             // Some hints to the browser that we want binary data.
             xhr.responseType = 'arraybuffer';
             if (xhr.overrideMimeType) {
               xhr.overrideMimeType('text/plain; charset=x-user-defined');
             }
-  
+
             xhr.send(null);
             if (!(xhr.status >= 200 && xhr.status < 300 || xhr.status === 304)) throw new Error("Couldn't load " + url + ". Status: " + xhr.status);
             if (xhr.response !== undefined) {
@@ -3527,7 +3527,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             if (typeof lazyArray.chunks[chunkNum] == 'undefined') throw new Error('doXHR failed!');
             return lazyArray.chunks[chunkNum];
           });
-  
+
           if (usesGzip || !datalength) {
             // if the server uses gzip or doesn't supply the length, we have to download the whole file to get the (uncompressed) length
             chunkSize = datalength = 1; // this will force getter(0)/doXHR do download the whole file
@@ -3535,7 +3535,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             chunkSize = datalength;
             out("LazyFiles on gzip forces download of the whole file when length is accessed");
           }
-  
+
           this._length = datalength;
           this._chunkSize = chunkSize;
           this.lengthKnown = true;
@@ -3561,12 +3561,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
               }
             }
           });
-  
+
           var properties = { isDevice: false, contents: lazyArray };
         } else {
           var properties = { isDevice: false, url: url };
         }
-  
+
         var node = FS.createFile(parent, name, properties, canRead, canWrite);
         // This is a total hack, but I want to get this lazy file code out of the
         // core of MEMFS. If we want to keep this lazy file concept I feel it should
@@ -3640,7 +3640,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },standardizePath:() => {
         abort('FS.standardizePath has been removed; use PATH.normalize instead');
       }};
-  
+
   var SYSCALLS = {DEFAULT_POLLMASK:5,calculateAt:function(dirfd, path, allowEmpty) {
         if (PATH.isAbs(path)) {
           return path;
@@ -3715,7 +3715,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function ___syscall_fcntl64(fd, cmd, varargs) {
   SYSCALLS.varargs = varargs;
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       switch (cmd) {
         case 0: {
@@ -3739,7 +3739,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
         case 5:
         /* case 5: Currently in musl F_GETLK64 has same value as F_GETLK, so omitted to avoid duplicate case blocks. If that changes, uncomment this */ {
-          
+
           var arg = SYSCALLS.get();
           var offset = 0;
           // We're always unlocked.
@@ -3750,8 +3750,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         case 7:
         /* case 6: Currently in musl F_SETLK64 has same value as F_SETLK, so omitted to avoid duplicate case blocks. If that changes, uncomment this */
         /* case 7: Currently in musl F_SETLKW64 has same value as F_SETLKW, so omitted to avoid duplicate case blocks. If that changes, uncomment this */
-          
-          
+
+
           return 0; // Pretend that the locking is successful.
         case 16:
         case 8:
@@ -3772,7 +3772,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function ___syscall_fstat64(fd, buf) {
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       return SYSCALLS.doStat(FS.stat, stream.path, buf);
     } catch (e) {
@@ -3781,15 +3781,15 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   }
   }
 
-  
+
   var stringToUTF8 = (str, outPtr, maxBytesToWrite) => {
       assert(typeof maxBytesToWrite == 'number', 'stringToUTF8(str, outPtr, maxBytesToWrite) is missing the third parameter that specifies the length of the output buffer!');
       return stringToUTF8Array(str, HEAPU8,outPtr, maxBytesToWrite);
     };
-  
+
   function ___syscall_getcwd(buf, size) {
   try {
-  
+
       if (size === 0) return -28;
       var cwd = FS.cwd();
       var cwdLengthInBytes = lengthBytesUTF8(cwd) + 1;
@@ -3805,7 +3805,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function ___syscall_ioctl(fd, op, varargs) {
   SYSCALLS.varargs = varargs;
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       switch (op) {
         case 21509: {
@@ -3899,7 +3899,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function ___syscall_lstat64(path, buf) {
   try {
-  
+
       path = SYSCALLS.getStr(path);
       return SYSCALLS.doStat(FS.lstat, path, buf);
     } catch (e) {
@@ -3910,7 +3910,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function ___syscall_newfstatat(dirfd, path, buf, flags) {
   try {
-  
+
       path = SYSCALLS.getStr(path);
       var nofollow = flags & 256;
       var allowEmpty = flags & 4096;
@@ -3927,7 +3927,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function ___syscall_openat(dirfd, path, flags, varargs) {
   SYSCALLS.varargs = varargs;
   try {
-  
+
       path = SYSCALLS.getStr(path);
       path = SYSCALLS.calculateAt(dirfd, path);
       var mode = varargs ? SYSCALLS.get() : 0;
@@ -3940,7 +3940,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function ___syscall_stat64(path, buf) {
   try {
-  
+
       path = SYSCALLS.getStr(path);
       return SYSCALLS.doStat(FS.stat, path, buf);
     } catch (e) {
@@ -3955,19 +3955,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function readI53FromI64(ptr) {
       return HEAPU32[ptr>>2] + HEAP32[ptr+4>>2] * 4294967296;
     }
-  
+
   var isLeapYear = (year) => {
         return year%4 === 0 && (year%100 !== 0 || year%400 === 0);
     };
-  
+
   var MONTH_DAYS_LEAP_CUMULATIVE = [0,31,60,91,121,152,182,213,244,274,305,335];
-  
+
   var MONTH_DAYS_REGULAR_CUMULATIVE = [0,31,59,90,120,151,181,212,243,273,304,334];
   var ydayFromDate = (date) => {
       var leap = isLeapYear(date.getFullYear());
       var monthDaysCumulative = (leap ? MONTH_DAYS_LEAP_CUMULATIVE : MONTH_DAYS_REGULAR_CUMULATIVE);
       var yday = monthDaysCumulative[date.getMonth()] + date.getDate() - 1; // -1 since it's days since Jan 1
-  
+
       return yday;
     };
   var __localtime_js = (time, tmPtr) => {
@@ -3979,11 +3979,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       HEAP32[(((tmPtr)+(16))>>2)] = date.getMonth();
       HEAP32[(((tmPtr)+(20))>>2)] = date.getFullYear()-1900;
       HEAP32[(((tmPtr)+(24))>>2)] = date.getDay();
-  
+
       var yday = ydayFromDate(date)|0;
       HEAP32[(((tmPtr)+(28))>>2)] = yday;
       HEAP32[(((tmPtr)+(36))>>2)] = -(date.getTimezoneOffset() * 60);
-  
+
       // Attention: DST is in December in South, and some regions don't have DST at all.
       var start = new Date(date.getFullYear(), 0, 1);
       var summerOffset = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
@@ -3992,20 +3992,20 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       HEAP32[(((tmPtr)+(32))>>2)] = dst;
     };
 
-  
-  
-  
-  
+
+
+
+
   function convertI32PairToI53Checked(lo, hi) {
       assert(lo == (lo >>> 0) || lo == (lo|0)); // lo should either be a i32 or a u32
       assert(hi === (hi|0));                    // hi should be a i32
       return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
     }
-  
-  
+
+
   function __mmap_js(len, prot, flags, fd, offset_low, offset_high, allocated, addr) {
   try {
-  
+
       var offset = convertI32PairToI53Checked(offset_low, offset_high); if (isNaN(offset)) return -61;
       var stream = SYSCALLS.getStreamFromFD(fd);
       var res = FS.mmap(stream, len, offset, prot, flags);
@@ -4019,13 +4019,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   }
   }
 
-  
-  
-  
-  
+
+
+
+
   function __munmap_js(addr, len, prot, flags, fd, offset_low, offset_high) {
   try {
-  
+
       var offset = convertI32PairToI53Checked(offset_low, offset_high); if (isNaN(offset)) return -61;
       var stream = SYSCALLS.getStreamFromFD(fd);
       if (prot & 2) {
@@ -4039,8 +4039,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   }
   }
 
-  
-  
+
+
   var stringToNewUTF8 = (str) => {
       var size = lengthBytesUTF8(str) + 1;
       var ret = _malloc(size);
@@ -4054,21 +4054,21 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       var summer = new Date(currentYear, 6, 1);
       var winterOffset = winter.getTimezoneOffset();
       var summerOffset = summer.getTimezoneOffset();
-  
+
       // Local standard timezone offset. Local standard time is not adjusted for daylight savings.
       // This code uses the fact that getTimezoneOffset returns a greater value during Standard Time versus Daylight Saving Time (DST).
       // Thus it determines the expected output during Standard Time, and it compares whether the output of the given date the same (Standard) or less (DST).
       var stdTimezoneOffset = Math.max(winterOffset, summerOffset);
-  
+
       // timezone is specified as seconds west of UTC ("The external variable
       // `timezone` shall be set to the difference, in seconds, between
       // Coordinated Universal Time (UTC) and local standard time."), the same
       // as returned by stdTimezoneOffset.
       // See http://pubs.opengroup.org/onlinepubs/009695399/functions/tzset.html
       HEAPU32[((timezone)>>2)] = stdTimezoneOffset * 60;
-  
+
       HEAP32[((daylight)>>2)] = Number(winterOffset != summerOffset);
-  
+
       function extractZone(date) {
         var match = date.toTimeString().match(/\(([A-Za-z ]+)\)$/);
         return match ? match[1] : "GMT";
@@ -4146,7 +4146,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },deferredCalls:[],deferCall:function(targetFunction, precedence, argsList) {
         function arraysHaveEqualContent(arrA, arrB) {
           if (arrA.length != arrB.length) return false;
-  
+
           for (var i in arrA) {
             if (arrA[i] != arrB[i]) return false;
           }
@@ -4164,7 +4164,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           precedence,
           argsList
         });
-  
+
         JSEvents.deferredCalls.sort(function(x,y) { return x.precedence < y.precedence; });
       },removeDeferredCalls:function(targetFunction) {
         for (var i = 0; i < JSEvents.deferredCalls.length; ++i) {
@@ -4187,7 +4187,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       },eventHandlers:[],removeAllHandlersOnTarget:function(target, eventTypeString) {
         for (var i = 0; i < JSEvents.eventHandlers.length; ++i) {
-          if (JSEvents.eventHandlers[i].target == target && 
+          if (JSEvents.eventHandlers[i].target == target &&
             (!eventTypeString || eventTypeString == JSEvents.eventHandlers[i].eventTypeString)) {
              JSEvents._removeHandler(i--);
            }
@@ -4215,7 +4215,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // Out of event handler - restore nesting count.
           --JSEvents.inEventHandler;
         };
-        
+
         if (eventHandler.callbackfunc) {
           eventHandler.eventListenerFunc = jsEventHandler;
           eventHandler.target.addEventListener(eventHandler.eventTypeString, jsEventHandler, eventHandler.useCapture);
@@ -4242,7 +4242,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         || document.webkitFullscreenEnabled
          ;
       }};
-  
+
   function maybeCStringToJsString(cString) {
       // "cString > 2" checks if the input is a number, and isn't of the special
       // values we accept here, EMSCRIPTEN_EVENT_TARGET_* (which map to 0, 1, 2).
@@ -4250,29 +4250,29 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // memory, and points to a C string.
       return cString > 2 ? UTF8ToString(cString) : cString;
     }
-  
+
   var specialHTMLTargets = [0, typeof document != 'undefined' ? document : 0, typeof window != 'undefined' ? window : 0];
   function findEventTarget(target) {
       target = maybeCStringToJsString(target);
       var domElement = specialHTMLTargets[target] || (typeof document != 'undefined' ? document.querySelector(target) : undefined);
       return domElement;
     }
-  
+
   function getBoundingClientRect(e) {
       return specialHTMLTargets.indexOf(e) < 0 ? e.getBoundingClientRect() : {'left':0,'top':0};
     }
   function _emscripten_get_element_css_size(target, width, height) {
       target = findEventTarget(target);
       if (!target) return -4;
-  
+
       var rect = getBoundingClientRect(target);
       HEAPF64[((width)>>3)] = rect.width;
       HEAPF64[((height)>>3)] = rect.height;
-  
+
       return 0;
     }
 
-  
+
   function fillGamepadEventData(eventStruct, e) {
       HEAPF64[((eventStruct)>>3)] = e.timestamp;
       for (var i = 0; i < e.axes.length; ++i) {
@@ -4303,16 +4303,16 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   function _emscripten_get_gamepad_status(index, gamepadState) {
       if (!JSEvents.lastGamepadState) throw 'emscripten_get_gamepad_status() can only be called after having first called emscripten_sample_gamepad_data() and that function has returned EMSCRIPTEN_RESULT_SUCCESS!';
-  
+
       // INVALID_PARAM is returned on a Gamepad index that never was there.
       if (index < 0 || index >= JSEvents.lastGamepadState.length) return -5;
-  
+
       // NO_DATA is returned on a Gamepad index that was removed.
       // For previously disconnected gamepads there should be an empty slot (null/undefined/false) at the index.
       // This is because gamepads must keep their original position in the array.
       // For example, removing the first of two gamepads produces [null/undefined/false, gamepad].
       if (!JSEvents.lastGamepadState[index]) return -7;
-  
+
       fillGamepadEventData(gamepadState, JSEvents.lastGamepadState[index]);
       return 0;
     }
@@ -4341,7 +4341,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         return 1;
       }
     }
-  
+
   function webgl_enable_OES_vertex_array_object(ctx) {
       // Extension available in WebGL 1 from Firefox 25 and WebKit 536.28/desktop Safari 6.0.3 onwards. Core feature in WebGL 2.
       var ext = ctx.getExtension('OES_vertex_array_object');
@@ -4353,7 +4353,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         return 1;
       }
     }
-  
+
   function webgl_enable_WEBGL_draw_buffers(ctx) {
       // Extension available in WebGL 1 from Firefox 28 onwards. Core feature in WebGL 2.
       var ext = ctx.getExtension('WEBGL_draw_buffers');
@@ -4362,13 +4362,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         return 1;
       }
     }
-  
+
   function webgl_enable_WEBGL_multi_draw(ctx) {
       // Closure is expected to be allowed to minify the '.multiDrawWebgl' property, so not accessing it quoted.
       return !!(ctx.multiDrawWebgl = ctx.getExtension('WEBGL_multi_draw'));
     }
-  
-  
+
+
   var GL = {counter:1,buffers:[],programs:[],framebuffers:[],renderbuffers:[],textures:[],shaders:[],vaos:[],contexts:[],offscreenCanvases:{},queries:[],stringCache:{},unpackAlignment:4,recordError:function recordError(errorCode) {
         if (!GL.lastError) {
           GL.lastError = errorCode;
@@ -4387,7 +4387,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
         return source;
       },createContext:function(/** @type {HTMLCanvasElement} */ canvas, webGLContextAttributes) {
-  
+
         // BUG: Workaround Safari WebGL issue: After successfully acquiring WebGL context on a canvas,
         // calling .getContext() will always return that context independent of which 'webgl' or 'webgl2'
         // context version was passed. See https://bugs.webkit.org/show_bug.cgi?id=222758 and
@@ -4402,38 +4402,38 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           }
           canvas.getContext = fixedGetContext;
         }
-  
+
         var ctx =
           (canvas.getContext("webgl", webGLContextAttributes)
             // https://caniuse.com/#feat=webgl
             );
-  
+
         if (!ctx) return 0;
-  
+
         var handle = GL.registerContext(ctx, webGLContextAttributes);
-  
+
         return handle;
       },registerContext:function(ctx, webGLContextAttributes) {
         // without pthreads a context is just an integer ID
         var handle = GL.getNewId(GL.contexts);
-  
+
         var context = {
           handle,
           attributes: webGLContextAttributes,
           version: webGLContextAttributes.majorVersion,
           GLctx: ctx
         };
-  
+
         // Store the created context object so that we can access the context given a canvas without having to pass the parameters again.
         if (ctx.canvas) ctx.canvas.GLctxObject = context;
         GL.contexts[handle] = context;
         if (typeof webGLContextAttributes.enableExtensionsByDefault == 'undefined' || webGLContextAttributes.enableExtensionsByDefault) {
           GL.initExtensions(context);
         }
-  
+
         return handle;
       },makeContextCurrent:function(contextHandle) {
-  
+
         GL.currentContext = GL.contexts[contextHandle]; // Active Emscripten GL layer context object.
         Module.ctx = GLctx = GL.currentContext && GL.currentContext.GLctx; // Active WebGL context object.
         return !(contextHandle && !GLctx);
@@ -4447,25 +4447,25 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },initExtensions:function(context) {
         // If this function is called without a specific context object, init the extensions of the currently active context.
         if (!context) context = GL.currentContext;
-  
+
         if (context.initExtensionsDone) return;
         context.initExtensionsDone = true;
-  
+
         var GLctx = context.GLctx;
-  
+
         // Detect the presence of a few extensions manually, this GL interop layer itself will need to know if they exist.
-  
+
         // Extensions that are only available in WebGL 1 (the calls will be no-ops if called on a WebGL 2 context active)
         webgl_enable_ANGLE_instanced_arrays(GLctx);
         webgl_enable_OES_vertex_array_object(GLctx);
         webgl_enable_WEBGL_draw_buffers(GLctx);
-  
+
         {
           GLctx.disjointTimerQueryExt = GLctx.getExtension("EXT_disjoint_timer_query");
         }
-  
+
         webgl_enable_WEBGL_multi_draw(GLctx);
-  
+
         // .getSupportedExtensions() can return null if context is lost, so coerce to empty array.
         var exts = GLctx.getSupportedExtensions() || [];
         exts.forEach(function(ext) {
@@ -4492,7 +4492,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glBeginQueryEXT = _glBeginQueryEXT;
 
-  
+
   /** @suppress {duplicate } */
   function _glBindAttribLocation(program, index, name) {
       GLctx.bindAttribLocation(GL.programs[program], index, UTF8ToString(name));
@@ -4501,16 +4501,16 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glBindBuffer(target, buffer) {
-  
+
       GLctx.bindBuffer(target, GL.buffers[buffer]);
     }
   var _emscripten_glBindBuffer = _glBindBuffer;
 
   /** @suppress {duplicate } */
   function _glBindFramebuffer(target, framebuffer) {
-  
+
       GLctx.bindFramebuffer(target, GL.framebuffers[framebuffer]);
-  
+
     }
   var _emscripten_glBindFramebuffer = _glBindFramebuffer;
 
@@ -4526,7 +4526,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glBindTexture = _glBindTexture;
 
-  
+
   /** @suppress {duplicate } */
   function _glBindVertexArray(vao) {
       GLctx.bindVertexArray(GL.vaos[vao]);
@@ -4557,7 +4557,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glBufferData(target, size, data, usage) {
-  
+
         // N.b. here first form specifies a heap subarray, second form an integer size, so the ?: code here is polymorphic. It is advised to avoid
         // randomly mixing both uses in calling code, to avoid any potential JS engine JIT issues.
         GLctx.bufferData(target, data ? HEAPU8.subarray(data, data+size) : size, usage);
@@ -4640,7 +4640,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function _glCreateShader(shaderType) {
       var id = GL.getNewId(GL.shaders);
       GL.shaders[id] = GLctx.createShader(shaderType);
-  
+
       return id;
     }
   var _emscripten_glCreateShader = _glCreateShader;
@@ -4654,15 +4654,15 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       for (var i = 0; i < n; i++) {
         var id = HEAP32[(((buffers)+(i*4))>>2)];
         var buffer = GL.buffers[id];
-  
+
         // From spec: "glDeleteBuffers silently ignores 0's and names that do not
         // correspond to existing buffer objects."
         if (!buffer) continue;
-  
+
         GLctx.deleteBuffer(buffer);
         buffer.name = 0;
         GL.buffers[id] = null;
-  
+
       }
     }
   var _emscripten_glDeleteBuffers = _glDeleteBuffers;
@@ -4745,7 +4745,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glDeleteTextures = _glDeleteTextures;
 
-  
+
   /** @suppress {duplicate } */
   function _glDeleteVertexArrays(n, vaos) {
       for (var i = 0; i < n; i++) {
@@ -4790,13 +4790,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glDrawArrays(mode, first, count) {
-  
+
       GLctx.drawArrays(mode, first, count);
-  
+
     }
   var _emscripten_glDrawArrays = _glDrawArrays;
 
-  
+
   /** @suppress {duplicate } */
   function _glDrawArraysInstanced(mode, first, count, primcount) {
       GLctx.drawArraysInstanced(mode, first, count, primcount);
@@ -4805,17 +4805,17 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   var _glDrawArraysInstancedANGLE = _glDrawArraysInstanced;
   var _emscripten_glDrawArraysInstancedANGLE = _glDrawArraysInstancedANGLE;
 
-  
+
   var tempFixedLengthArray = [];
-  
+
   /** @suppress {duplicate } */
   function _glDrawBuffers(n, bufs) {
-  
+
       var bufArray = tempFixedLengthArray[n];
       for (var i = 0; i < n; i++) {
         bufArray[i] = HEAP32[(((bufs)+(i*4))>>2)];
       }
-  
+
       GLctx.drawBuffers(bufArray);
     }
   /** @suppress {duplicate } */
@@ -4824,13 +4824,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glDrawElements(mode, count, type, indices) {
-  
+
       GLctx.drawElements(mode, count, type, indices);
-  
+
     }
   var _emscripten_glDrawElements = _glDrawElements;
 
-  
+
   /** @suppress {duplicate } */
   function _glDrawElementsInstanced(mode, count, type, indices, primcount) {
       GLctx.drawElementsInstanced(mode, count, type, indices, primcount);
@@ -4895,7 +4895,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         HEAP32[(((buffers)+(i*4))>>2)] = id;
       }
     }
-  
+
   /** @suppress {duplicate } */
   function _glGenBuffers(n, buffers) {
       __glGenObject(n, buffers, 'createBuffer', GL.buffers
@@ -4903,7 +4903,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGenBuffers = _glGenBuffers;
 
-  
+
   /** @suppress {duplicate } */
   function _glGenFramebuffers(n, ids) {
       __glGenObject(n, ids, 'createFramebuffer', GL.framebuffers
@@ -4928,7 +4928,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGenQueriesEXT = _glGenQueriesEXT;
 
-  
+
   /** @suppress {duplicate } */
   function _glGenRenderbuffers(n, renderbuffers) {
       __glGenObject(n, renderbuffers, 'createRenderbuffer', GL.renderbuffers
@@ -4936,7 +4936,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGenRenderbuffers = _glGenRenderbuffers;
 
-  
+
   /** @suppress {duplicate } */
   function _glGenTextures(n, textures) {
       __glGenObject(n, textures, 'createTexture', GL.textures
@@ -4944,8 +4944,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGenTextures = _glGenTextures;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glGenVertexArrays(n, arrays) {
       __glGenObject(n, arrays, 'createVertexArray', GL.vaos
@@ -4959,7 +4959,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function _glGenerateMipmap(x0) { GLctx.generateMipmap(x0) }
   var _emscripten_glGenerateMipmap = _glGenerateMipmap;
 
-  
+
   function __glGetActiveAttribOrUniform(funcName, program, index, bufSize, length, size, type, name) {
       program = GL.programs[program];
       var info = GLctx[funcName](program, index);
@@ -4970,14 +4970,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         if (type) HEAP32[((type)>>2)] = info.type;
       }
     }
-  
+
   /** @suppress {duplicate } */
   function _glGetActiveAttrib(program, index, bufSize, length, size, type, name) {
       __glGetActiveAttribOrUniform('getActiveAttrib', program, index, bufSize, length, size, type, name);
     }
   var _emscripten_glGetActiveAttrib = _glGetActiveAttrib;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetActiveUniform(program, index, bufSize, length, size, type, name) {
       __glGetActiveAttribOrUniform('getActiveUniform', program, index, bufSize, length, size, type, name);
@@ -4999,14 +4999,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetAttachedShaders = _glGetAttachedShaders;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetAttribLocation(program, name) {
       return GLctx.getAttribLocation(GL.programs[program], UTF8ToString(name));
     }
   var _emscripten_glGetAttribLocation = _glGetAttribLocation;
 
-  
+
   function readI53FromU64(ptr) {
       return HEAPU32[ptr>>2] + HEAPU32[ptr+4>>2] * 4294967296;
     }
@@ -5016,7 +5016,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       var deserialized = (num >= 0) ? readI53FromU64(ptr) : readI53FromI64(ptr);
       if (deserialized != num) warnOnce('writeI53ToI64() out of range: serialized JS Number ' + num + ' to Wasm heap as bytes lo=' + ptrToString(HEAPU32[ptr>>2]) + ', hi=' + ptrToString(HEAPU32[ptr+4>>2]) + ', which deserializes back to ' + deserialized + ' instead!');
     }
-  
+
   function emscriptenWebGLGet(name_, p, type) {
       // Guard against user passing a null pointer.
       // Note that GLES2 spec does not say anything about how passing a null pointer should be treated.
@@ -5045,9 +5045,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           var formats = GLctx.getParameter(0x86A3 /*GL_COMPRESSED_TEXTURE_FORMATS*/);
           ret = formats ? formats.length : 0;
           break;
-  
+
       }
-  
+
       if (ret === undefined) {
         var result = GLctx.getParameter(name_);
         switch (typeof result) {
@@ -5109,7 +5109,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             return;
         }
       }
-  
+
       switch (type) {
         case 1: writeI53ToI64(p, ret); break;
         case 0: HEAP32[((p)>>2)] = ret; break;
@@ -5117,7 +5117,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         case 4: HEAP8[((p)>>0)] = ret ? 1 : 0; break;
       }
     }
-  
+
   /** @suppress {duplicate } */
   function _glGetBooleanv(name_, p) {
       emscriptenWebGLGet(name_, p, 4);
@@ -5144,7 +5144,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetError = _glGetError;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetFloatv(name_, p) {
       emscriptenWebGLGet(name_, p, 2);
@@ -5162,7 +5162,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetFramebufferAttachmentParameteriv = _glGetFramebufferAttachmentParameteriv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetIntegerv(name_, p) {
       emscriptenWebGLGet(name_, p, 0);
@@ -5186,14 +5186,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         GL.recordError(0x501 /* GL_INVALID_VALUE */);
         return;
       }
-  
+
       if (program >= GL.counter) {
         GL.recordError(0x501 /* GL_INVALID_VALUE */);
         return;
       }
-  
+
       program = GL.programs[program];
-  
+
       if (pname == 0x8B84) { // GL_INFO_LOG_LENGTH
         var log = GLctx.getProgramInfoLog(program);
         if (log === null) log = '(unknown error)';
@@ -5225,7 +5225,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetProgramiv = _glGetProgramiv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetQueryObjecti64vEXT(id, pname, params) {
       if (!params) {
@@ -5269,12 +5269,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetQueryObjectivEXT = _glGetQueryObjectivEXT;
 
-  
+
   /** @suppress {duplicate } */
   var _glGetQueryObjectui64vEXT = _glGetQueryObjecti64vEXT;
   var _emscripten_glGetQueryObjectui64vEXT = _glGetQueryObjectui64vEXT;
 
-  
+
   /** @suppress {duplicate } */
   var _glGetQueryObjectuivEXT = _glGetQueryObjectivEXT;
   var _emscripten_glGetQueryObjectuivEXT = _glGetQueryObjectuivEXT;
@@ -5303,7 +5303,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetRenderbufferParameteriv = _glGetRenderbufferParameteriv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetShaderInfoLog(shader, maxLength, length, infoLog) {
       var log = GLctx.getShaderInfoLog(GL.shaders[shader]);
@@ -5360,7 +5360,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetShaderiv = _glGetShaderiv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetString(name_) {
       var ret = GL.stringCache[name_];
@@ -5381,7 +5381,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             }
             ret = s && stringToNewUTF8(s);
             break;
-  
+
           case 0x1F02 /* GL_VERSION */:
             var glVersion = GLctx.getParameter(0x1F02 /*GL_VERSION*/);
             // return GLES version string corresponding to the version of the WebGL context
@@ -5437,17 +5437,17 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {checkTypes} */
   var jstoi_q = (str) => parseInt(str);
-  
+
   /** @noinline */
   function webglGetLeftBracePos(name) {
       return name.slice(-1) == ']' && name.lastIndexOf('[');
     }
-  
+
   function webglPrepareUniformLocationsBeforeFirstUse(program) {
       var uniformLocsById = program.uniformLocsById, // Maps GLuint -> WebGLUniformLocation
         uniformSizeAndIdsByName = program.uniformSizeAndIdsByName, // Maps name -> [uniform array length, GLuint]
         i, j;
-  
+
       // On the first time invocation of glGetUniformLocation on this shader program:
       // initialize cache data structures and discover which uniforms are arrays.
       if (!uniformLocsById) {
@@ -5455,14 +5455,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         program.uniformLocsById = uniformLocsById = {};
         // maps integer locations back to uniform name strings, so that we can lazily fetch uniform array locations
         program.uniformArrayNamesById = {};
-  
+
         for (i = 0; i < GLctx.getProgramParameter(program, 0x8B86/*GL_ACTIVE_UNIFORMS*/); ++i) {
           var u = GLctx.getActiveUniform(program, i);
           var nm = u.name;
           var sz = u.size;
           var lb = webglGetLeftBracePos(nm);
           var arrayName = lb > 0 ? nm.slice(0, lb) : nm;
-  
+
           // Assign a new location.
           var id = program.uniformIdCounter;
           program.uniformIdCounter += sz;
@@ -5472,7 +5472,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // application fills arrays always in full starting from the first
           // element of the array.
           uniformSizeAndIdsByName[arrayName] = [sz, id];
-  
+
           // Store placeholder integers in place that highlight that these
           // >0 index locations are array indices pending population.
           for(j = 0; j < sz; ++j) {
@@ -5482,36 +5482,36 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       }
     }
-  
-  
-  
+
+
+
   /** @suppress {duplicate } */
   function _glGetUniformLocation(program, name) {
-  
+
       name = UTF8ToString(name);
-  
+
       if (program = GL.programs[program]) {
         webglPrepareUniformLocationsBeforeFirstUse(program);
         var uniformLocsById = program.uniformLocsById; // Maps GLuint -> WebGLUniformLocation
         var arrayIndex = 0;
         var uniformBaseName = name;
-  
+
         // Invariant: when populating integer IDs for uniform locations, we must maintain the precondition that
         // arrays reside in contiguous addresses, i.e. for a 'vec4 colors[10];', colors[4] must be at location colors[0]+4.
         // However, user might call glGetUniformLocation(program, "colors") for an array, so we cannot discover based on the user
         // input arguments whether the uniform we are dealing with is an array. The only way to discover which uniforms are arrays
         // is to enumerate over all the active uniforms in the program.
         var leftBrace = webglGetLeftBracePos(name);
-  
+
         // If user passed an array accessor "[index]", parse the array index off the accessor.
         if (leftBrace > 0) {
           arrayIndex = jstoi_q(name.slice(leftBrace + 1)) >>> 0; // "index]", coerce parseInt(']') with >>>0 to treat "foo[]" as "foo[0]" and foo[-1] as unsigned out-of-bounds.
           uniformBaseName = name.slice(0, leftBrace);
         }
-  
+
         // Have we cached the location of this uniform before?
         var sizeAndId = program.uniformSizeAndIdsByName[uniformBaseName]; // A pair [array length, GLint of the uniform location]
-  
+
         // If an uniform with this name exists, and if its index is within the array limits (if it's even an array),
         // query the WebGLlocation, or return an existing cached location.
         if (sizeAndId && arrayIndex < sizeAndId[0]) {
@@ -5532,11 +5532,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function webglGetUniformLocation(location) {
       var p = GLctx.currentProgram;
-  
+
       if (p) {
         var webglLoc = p.uniformLocsById[location];
         // p.uniformLocsById[location] stores either an integer, or a WebGLUniformLocation.
-  
+
         // If an integer, we have not yet bound the location, so do it now. The integer value specifies the array index
         // we should bind to.
         if (typeof webglLoc == 'number') {
@@ -5548,8 +5548,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         GL.recordError(0x502/*GL_INVALID_OPERATION*/);
       }
     }
-  
-  
+
+
   /** @suppress{checkTypes} */
   function emscriptenWebGLGetUniform(program, location, params, type) {
       if (!params) {
@@ -5575,14 +5575,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       }
     }
-  
+
   /** @suppress {duplicate } */
   function _glGetUniformfv(program, location, params) {
       emscriptenWebGLGetUniform(program, location, params, 2);
     }
   var _emscripten_glGetUniformfv = _glGetUniformfv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetUniformiv(program, location, params) {
       emscriptenWebGLGetUniform(program, location, params, 0);
@@ -5628,7 +5628,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       }
     }
-  
+
   /** @suppress {duplicate } */
   function _glGetVertexAttribfv(index, pname, params) {
       // N.B. This function may only be called if the vertex attribute was specified using the function glVertexAttrib*f(),
@@ -5637,7 +5637,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glGetVertexAttribfv = _glGetVertexAttribfv;
 
-  
+
   /** @suppress {duplicate } */
   function _glGetVertexAttribiv(index, pname, params) {
       // N.B. This function may only be called if the vertex attribute was specified using the function glVertexAttrib*f(),
@@ -5710,10 +5710,10 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glIsTexture = _glIsTexture;
 
-  
+
   /** @suppress {duplicate } */
   function _glIsVertexArray(array) {
-  
+
       var vao = GL.vaos[array];
       if (!vao) return 0;
       return GLctx.isVertexArray(vao);
@@ -5733,7 +5733,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // Invalidate earlier computed uniform->ID mappings, those have now become stale
       program.uniformLocsById = 0; // Mark as null-like so that glGetUniformLocation() knows to populate this again.
       program.uniformSizeAndIdsByName = {};
-  
+
     }
   var _emscripten_glLinkProgram = _glLinkProgram;
 
@@ -5764,7 +5764,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       var alignedRowSize = roundedToNextMultipleOf(plainRowSize, alignment);
       return height * alignedRowSize;
     }
-  
+
   function colorChannelsInGlTextureFormat(format) {
       // Micro-optimizations for size: map format to size by subtracting smallest enum value (0x1902) from all values first.
       // Also omit the most common size value (1) from the list, which is assumed by formats not on the list.
@@ -5780,32 +5780,32 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       };
       return colorChannels[format - 0x1902]||1;
     }
-  
+
   function heapObjectForWebGLType(type) {
       // Micro-optimization for size: Subtract lowest GL enum number (0x1400/* GL_BYTE */) from type to compare
       // smaller values for the heap, for shorter generated code size.
       // Also the type HEAPU16 is not tested for explicitly, but any unrecognized type will return out HEAPU16.
       // (since most types are HEAPU16)
       type -= 0x1400;
-  
+
       if (type == 1) return HEAPU8;
-  
+
       if (type == 4) return HEAP32;
-  
+
       if (type == 6) return HEAPF32;
-  
+
       if (type == 5
         || type == 28922
         )
         return HEAPU32;
-  
+
       return HEAPU16;
     }
-  
+
   function heapAccessShiftForWebGLHeap(heap) {
       return 31 - Math.clz32(heap.BYTES_PER_ELEMENT);
     }
-  
+
   function emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, internalFormat) {
       var heap = heapObjectForWebGLType(type);
       var shift = heapAccessShiftForWebGLHeap(heap);
@@ -5814,7 +5814,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       var bytes = computeUnpackAlignedImageSize(width, height, sizePerPixel, GL.unpackAlignment);
       return heap.subarray(pixels >> shift, pixels + bytes >> shift);
     }
-  
+
   /** @suppress {duplicate } */
   function _glReadPixels(x, y, width, height, format, type, pixels) {
       var pixelData = emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, format);
@@ -5855,7 +5855,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   /** @suppress {duplicate } */
   function _glShaderSource(shader, count, string, length) {
       var source = GL.getSource(shader, count, string, length);
-  
+
       GLctx.shaderSource(GL.shaders[shader], source);
     }
   var _emscripten_glShaderSource = _glShaderSource;
@@ -5884,7 +5884,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function _glStencilOpSeparate(x0, x1, x2, x3) { GLctx.stencilOpSeparate(x0, x1, x2, x3) }
   var _emscripten_glStencilOpSeparate = _glStencilOpSeparate;
 
-  
+
   /** @suppress {duplicate } */
   function _glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels) {
       GLctx.texImage2D(target, level, internalFormat, width, height, border, format, type, pixels ? emscriptenWebGLGetTexPixelData(type, format, width, height, pixels, internalFormat) : null);
@@ -5913,7 +5913,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glTexParameteriv = _glTexParameteriv;
 
-  
+
   /** @suppress {duplicate } */
   function _glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels) {
       var pixelData = null;
@@ -5922,19 +5922,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glTexSubImage2D = _glTexSubImage2D;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform1f(location, v0) {
       GLctx.uniform1f(webglGetUniformLocation(location), v0);
     }
   var _emscripten_glUniform1f = _glUniform1f;
 
-  
+
   var miniTempWebGLFloatBuffers = [];
-  
+
   /** @suppress {duplicate } */
   function _glUniform1fv(location, count, value) {
-  
+
       if (count <= 288) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[count-1];
@@ -5949,19 +5949,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform1fv = _glUniform1fv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform1i(location, v0) {
       GLctx.uniform1i(webglGetUniformLocation(location), v0);
     }
   var _emscripten_glUniform1i = _glUniform1i;
 
-  
+
   var miniTempWebGLIntBuffers = [];
-  
+
   /** @suppress {duplicate } */
   function _glUniform1iv(location, count, value) {
-  
+
       if (count <= 288) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLIntBuffers[count-1];
@@ -5976,18 +5976,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform1iv = _glUniform1iv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform2f(location, v0, v1) {
       GLctx.uniform2f(webglGetUniformLocation(location), v0, v1);
     }
   var _emscripten_glUniform2f = _glUniform2f;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform2fv(location, count, value) {
-  
+
       if (count <= 144) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[2*count-1];
@@ -6003,18 +6003,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform2fv = _glUniform2fv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform2i(location, v0, v1) {
       GLctx.uniform2i(webglGetUniformLocation(location), v0, v1);
     }
   var _emscripten_glUniform2i = _glUniform2i;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform2iv(location, count, value) {
-  
+
       if (count <= 144) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLIntBuffers[2*count-1];
@@ -6030,18 +6030,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform2iv = _glUniform2iv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform3f(location, v0, v1, v2) {
       GLctx.uniform3f(webglGetUniformLocation(location), v0, v1, v2);
     }
   var _emscripten_glUniform3f = _glUniform3f;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform3fv(location, count, value) {
-  
+
       if (count <= 96) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[3*count-1];
@@ -6058,18 +6058,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform3fv = _glUniform3fv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform3i(location, v0, v1, v2) {
       GLctx.uniform3i(webglGetUniformLocation(location), v0, v1, v2);
     }
   var _emscripten_glUniform3i = _glUniform3i;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform3iv(location, count, value) {
-  
+
       if (count <= 96) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLIntBuffers[3*count-1];
@@ -6086,18 +6086,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform3iv = _glUniform3iv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform4f(location, v0, v1, v2, v3) {
       GLctx.uniform4f(webglGetUniformLocation(location), v0, v1, v2, v3);
     }
   var _emscripten_glUniform4f = _glUniform4f;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform4fv(location, count, value) {
-  
+
       if (count <= 72) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[4*count-1];
@@ -6119,18 +6119,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform4fv = _glUniform4fv;
 
-  
+
   /** @suppress {duplicate } */
   function _glUniform4i(location, v0, v1, v2, v3) {
       GLctx.uniform4i(webglGetUniformLocation(location), v0, v1, v2, v3);
     }
   var _emscripten_glUniform4i = _glUniform4i;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniform4iv(location, count, value) {
-  
+
       if (count <= 72) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLIntBuffers[4*count-1];
@@ -6148,11 +6148,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniform4iv = _glUniform4iv;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniformMatrix2fv(location, count, transpose, value) {
-  
+
       if (count <= 72) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[4*count-1];
@@ -6170,11 +6170,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniformMatrix2fv = _glUniformMatrix2fv;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniformMatrix3fv(location, count, transpose, value) {
-  
+
       if (count <= 32) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[9*count-1];
@@ -6197,11 +6197,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
   var _emscripten_glUniformMatrix3fv = _glUniformMatrix3fv;
 
-  
-  
+
+
   /** @suppress {duplicate } */
   function _glUniformMatrix4fv(location, count, transpose, value) {
-  
+
       if (count <= 18) {
         // avoid allocation when uploading few enough uniforms
         var view = miniTempWebGLFloatBuffers[16*count-1];
@@ -6257,7 +6257,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glVertexAttrib1fv(index, v) {
-  
+
       GLctx.vertexAttrib1f(index, HEAPF32[v>>2]);
     }
   var _emscripten_glVertexAttrib1fv = _glVertexAttrib1fv;
@@ -6268,7 +6268,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glVertexAttrib2fv(index, v) {
-  
+
       GLctx.vertexAttrib2f(index, HEAPF32[v>>2], HEAPF32[v+4>>2]);
     }
   var _emscripten_glVertexAttrib2fv = _glVertexAttrib2fv;
@@ -6279,7 +6279,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glVertexAttrib3fv(index, v) {
-  
+
       GLctx.vertexAttrib3f(index, HEAPF32[v>>2], HEAPF32[v+4>>2], HEAPF32[v+8>>2]);
     }
   var _emscripten_glVertexAttrib3fv = _glVertexAttrib3fv;
@@ -6290,12 +6290,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   /** @suppress {duplicate } */
   function _glVertexAttrib4fv(index, v) {
-  
+
       GLctx.vertexAttrib4f(index, HEAPF32[v>>2], HEAPF32[v+4>>2], HEAPF32[v+8>>2], HEAPF32[v+12>>2]);
     }
   var _emscripten_glVertexAttrib4fv = _glVertexAttrib4fv;
 
-  
+
   /** @suppress {duplicate } */
   function _glVertexAttribDivisor(index, divisor) {
       GLctx.vertexAttribDivisor(index, divisor);
@@ -6322,7 +6322,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // for any code that deals with heap sizes, which would require special
       // casing all heap size related code to treat 0 specially.
       2147483648;
-  
+
   var growMemory = (size) => {
       var b = wasmMemory.buffer;
       var pages = (size - b.byteLength + 65535) >>> 16;
@@ -6343,7 +6343,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // With multithreaded builds, races can happen (another thread might increase the size
       // in between), so return a failure, and let the caller retry.
       assert(requestedSize > oldSize);
-  
+
       // Memory resize rules:
       // 1.  Always increase heap size to at least the requested size, rounded up
       //     to next page multiple.
@@ -6360,7 +6360,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       //     over-eager decision to excessively reserve due to (3) above.
       //     Hence if an allocation fails, cut down on the amount of excess
       //     growth, in an attempt to succeed to perform a smaller allocation.
-  
+
       // A limit is set for how much we can grow. We should not exceed that
       // (the wasm binary specifies it, so if we tried, we'd fail anyhow).
       var maxHeapSize = getHeapMax();
@@ -6368,9 +6368,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         err(`Cannot enlarge memory, asked to go up to ${requestedSize} bytes, but the limit is ${maxHeapSize} bytes!`);
         return false;
       }
-  
+
       var alignUp = (x, multiple) => x + (multiple - x % multiple) % multiple;
-  
+
       // Loop through potential heap size increases. If we attempt a too eager
       // reservation that fails, cut down on the attempted size and reserve a
       // smaller bump instead. (max 3 times, chosen somewhat arbitrarily)
@@ -6378,12 +6378,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         var overGrownHeapSize = oldSize * (1 + 0.2 / cutDown); // ensure geometric growth
         // but limit overreserving (default to capping at +96MB overgrowth at most)
         overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296 );
-  
+
         var newSize = Math.min(maxHeapSize, alignUp(Math.max(requestedSize, overGrownHeapSize), 65536));
-  
+
         var replacement = growMemory(newSize);
         if (replacement) {
-  
+
           return true;
         }
       }
@@ -6400,9 +6400,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         ? 0 : -1;
     }
 
-  
-  
-  
+
+
+
   function fillMouseEventData(eventStruct, e, target) {
       assert(eventStruct % 4 == 0);
       HEAPF64[((eventStruct)>>3)] = e.timeStamp;
@@ -6417,31 +6417,31 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       HEAP32[idx + 9] = e.metaKey;
       HEAP16[idx*2 + 20] = e.button;
       HEAP16[idx*2 + 21] = e.buttons;
-  
+
       HEAP32[idx + 11] = e["movementX"]
         ;
-  
+
       HEAP32[idx + 12] = e["movementY"]
         ;
-  
+
       var rect = getBoundingClientRect(target);
       HEAP32[idx + 13] = e.clientX - rect.left;
       HEAP32[idx + 14] = e.clientY - rect.top;
-  
+
     }
-  
-  
+
+
   var registerMouseEventCallback = function(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) {
       if (!JSEvents.mouseEvent) JSEvents.mouseEvent = _malloc( 72 );
       target = findEventTarget(target);
-  
+
       var mouseEventHandlerFunc = function(e = event) {
         // TODO: Make this access thread safe, or this could update live while app is reading it.
         fillMouseEventData(JSEvents.mouseEvent, e, target);
-  
+
         if (((a1, a2, a3) => dynCall_iiii.apply(null, [callbackfunc, a1, a2, a3]))(eventTypeId, JSEvents.mouseEvent, userData)) e.preventDefault();
       };
-  
+
       var eventHandler = {
         target,
         allowsDeferredCalls: eventTypeString != 'mousemove' && eventTypeString != 'mouseenter' && eventTypeString != 'mouseleave', // Mouse move events do not allow fullscreen/pointer lock requests to be handled in them!
@@ -6456,9 +6456,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       return registerMouseEventCallback(target, userData, useCapture, callbackfunc, 4, "click", targetThread);
     }
 
-  
-  
-  
+
+
+
   function fillFullscreenChangeEventData(eventStruct) {
       var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
       var isFullscreen = !!fullscreenElement;
@@ -6481,19 +6481,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         JSEvents.previousFullscreenElement = fullscreenElement;
       }
     }
-  
-  
+
+
   var registerFullscreenChangeEventCallback = function(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) {
       if (!JSEvents.fullscreenChangeEvent) JSEvents.fullscreenChangeEvent = _malloc( 280 );
-  
+
       var fullscreenChangeEventhandlerFunc = function(e = event) {
         var fullscreenChangeEvent = JSEvents.fullscreenChangeEvent;
-  
+
         fillFullscreenChangeEventData(fullscreenChangeEvent);
-  
+
         if (((a1, a2, a3) => dynCall_iiii.apply(null, [callbackfunc, a1, a2, a3]))(eventTypeId, fullscreenChangeEvent, userData)) e.preventDefault();
       };
-  
+
       var eventHandler = {
         target,
         eventTypeString,
@@ -6503,33 +6503,33 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       };
       return JSEvents.registerOrRemoveHandler(eventHandler);
     };
-  
-  
+
+
   function _emscripten_set_fullscreenchange_callback_on_thread(target, userData, useCapture, callbackfunc, targetThread) {
       if (!JSEvents.fullscreenEnabled()) return -1;
       target = findEventTarget(target);
       if (!target) return -4;
-  
+
       // Unprefixed Fullscreen API shipped in Chromium 71 (https://bugs.chromium.org/p/chromium/issues/detail?id=383813)
       // As of Safari 13.0.3 on macOS Catalina 10.15.1 still ships with prefixed webkitfullscreenchange. TODO: revisit this check once Safari ships unprefixed version.
       registerFullscreenChangeEventCallback(target, userData, useCapture, callbackfunc, 19, "webkitfullscreenchange", targetThread);
-  
+
       return registerFullscreenChangeEventCallback(target, userData, useCapture, callbackfunc, 19, "fullscreenchange", targetThread);
     }
 
-  
-  
-  
+
+
+
   var registerGamepadEventCallback = function(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) {
       if (!JSEvents.gamepadEvent) JSEvents.gamepadEvent = _malloc( 1432 );
-  
+
       var gamepadEventHandlerFunc = function(e = event) {
         var gamepadEvent = JSEvents.gamepadEvent;
         fillGamepadEventData(gamepadEvent, e["gamepad"]);
-  
+
         if (((a1, a2, a3) => dynCall_iiii.apply(null, [callbackfunc, a1, a2, a3]))(eventTypeId, gamepadEvent, userData)) e.preventDefault();
       };
-  
+
       var eventHandler = {
         target: findEventTarget(target),
         allowsDeferredCalls: true,
@@ -6550,7 +6550,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       return registerGamepadEventCallback(2, userData, useCapture, callbackfunc, 27, "gamepaddisconnected", targetThread);
     }
 
-  
+
   var handleException = (e) => {
       // Certain exception types we do not treat as errors since they are used for
       // internal control flow.
@@ -6568,8 +6568,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       quit_(1, e);
     };
-  
-  
+
+
   var _proc_exit = (code) => {
       EXITSTATUS = code;
       if (!keepRuntimeAlive()) {
@@ -6582,19 +6582,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   /** @param {boolean|number=} implicit */
   var exitJS = (status, implicit) => {
       EXITSTATUS = status;
-  
+
       checkUnflushedContent();
-  
+
       // if exit() was called explicitly, warn the user if the runtime isn't actually being shut down
       if (keepRuntimeAlive() && !implicit) {
         var msg = `program exited (with status: ${status}), but keepRuntimeAlive() is set (counter=${runtimeKeepaliveCounter}) due to an async operation, so halting execution but not exiting the runtime or preventing further async execution (you can use emscripten_force_exit, if you want to force a true shutdown)`;
         err(msg);
       }
-  
+
       _proc_exit(status);
     };
   var _exit = exitJS;
-  
+
   var maybeExit = () => {
       if (!keepRuntimeAlive()) {
         try {
@@ -6616,19 +6616,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         handleException(e);
       }
     };
-  
+
   /** @param {number=} timeout */
   var safeSetTimeout = (func, timeout) => {
-      
+
       return setTimeout(() => {
-        
+
         callUserCallback(func);
       }, timeout);
     };
-  
-  
-  
-  
+
+
+
+
   var Browser = {mainLoop:{running:false,scheduler:null,method:"",currentlyRunningMainloop:0,func:null,arg:0,timingMode:0,timingValue:0,currentFrameNumber:0,queue:[],pause:function() {
           Browser.mainLoop.scheduler = null;
           // Incrementing this signals the previous main loop that it's now become old, and it must return.
@@ -6671,7 +6671,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }},isFullscreen:false,pointerLock:false,moduleContextCreatedCallbacks:[],workers:[],init:function() {
         if (Browser.initted) return;
         Browser.initted = true;
-  
+
         // Support for plugins that can process preloaded files. You can add more of these to
         // your app by creating and appending to preloadPlugins.
         //
@@ -6679,7 +6679,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         // it is given the file's raw data. When it is done, it calls a callback with the file's
         // (possibly modified) data. For example, a plugin might decompress a file, or it
         // might create some side data structure for use later (like an Image element, etc.).
-  
+
         var imagePlugin = {};
         imagePlugin['canHandle'] = function imagePlugin_canHandle(name) {
           return !Module.noImageDecoding && /\.(jpg|jpeg|png|bmp)$/i.test(name);
@@ -6711,7 +6711,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           img.src = url;
         };
         preloadPlugins.push(imagePlugin);
-  
+
         var audioPlugin = {};
         audioPlugin['canHandle'] = function audioPlugin_canHandle(name) {
           return !Module.noAudioDecoding && name.substr(-4) in { '.ogg': 1, '.wav': 1, '.mp3': 1 };
@@ -6772,9 +6772,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           }, 10000);
         };
         preloadPlugins.push(audioPlugin);
-  
+
         // Canvas event setup
-  
+
         function pointerLockChange() {
           Browser.pointerLock = document['pointerLockElement'] === Module['canvas'] ||
                                 document['mozPointerLockElement'] === Module['canvas'] ||
@@ -6785,7 +6785,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         if (canvas) {
           // forced aspect ratio can be enabled by defining 'forcedAspectRatio' on Module
           // Module['forcedAspectRatio'] = 4 / 3;
-  
+
           canvas.requestPointerLock = canvas['requestPointerLock'] ||
                                       canvas['mozRequestPointerLock'] ||
                                       canvas['webkitRequestPointerLock'] ||
@@ -6797,12 +6797,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
                                    document['msExitPointerLock'] ||
                                    (() => {}); // no-op if function does not exist
           canvas.exitPointerLock = canvas.exitPointerLock.bind(document);
-  
+
           document.addEventListener('pointerlockchange', pointerLockChange, false);
           document.addEventListener('mozpointerlockchange', pointerLockChange, false);
           document.addEventListener('webkitpointerlockchange', pointerLockChange, false);
           document.addEventListener('mspointerlockchange', pointerLockChange, false);
-  
+
           if (Module['elementPointerLock']) {
             canvas.addEventListener("click", (ev) => {
               if (!Browser.pointerLock && Module['canvas'].requestPointerLock) {
@@ -6814,7 +6814,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       },createContext:function(/** @type {HTMLCanvasElement} */ canvas, useWebGL, setInModule, webGLContextAttributes) {
         if (useWebGL && Module.ctx && canvas == Module.canvas) return Module.ctx; // no need to recreate GL context if it's already been created for this canvas.
-  
+
         var ctx;
         var contextHandle;
         if (useWebGL) {
@@ -6824,13 +6824,13 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             alpha: false,
             majorVersion: 1,
           };
-  
+
           if (webGLContextAttributes) {
             for (var attribute in webGLContextAttributes) {
               contextAttributes[attribute] = webGLContextAttributes[attribute];
             }
           }
-  
+
           // This check of existence of GL is here to satisfy Closure compiler, which yells if variable GL is referenced below but GL object is not
           // actually compiled in because application is not doing any GL operations. TODO: Ideally if GL is not being used, this function
           // Browser.createContext() should not even be emitted.
@@ -6843,12 +6843,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else {
           ctx = canvas.getContext('2d');
         }
-  
+
         if (!ctx) return null;
-  
+
         if (setInModule) {
           if (!useWebGL) assert(typeof GLctx == 'undefined', 'cannot set in module if GLctx is used, but we are a non-GL context that would replace it');
-  
+
           Module.ctx = ctx;
           if (useWebGL) GL.makeContextCurrent(contextHandle);
           Module.useWebGL = useWebGL;
@@ -6861,7 +6861,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         Browser.resizeCanvas = resizeCanvas;
         if (typeof Browser.lockPointer == 'undefined') Browser.lockPointer = true;
         if (typeof Browser.resizeCanvas == 'undefined') Browser.resizeCanvas = false;
-  
+
         var canvas = Module['canvas'];
         function fullscreenChange() {
           Browser.isFullscreen = false;
@@ -6881,7 +6881,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             // remove the full screen specific parent of the canvas again to restore the HTML structure from before going full screen
             canvasContainer.parentNode.insertBefore(canvas, canvasContainer);
             canvasContainer.parentNode.removeChild(canvasContainer);
-  
+
             if (Browser.resizeCanvas) {
               Browser.setWindowedCanvasSize();
             } else {
@@ -6891,7 +6891,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           if (Module['onFullScreen']) Module['onFullScreen'](Browser.isFullscreen);
           if (Module['onFullscreen']) Module['onFullscreen'](Browser.isFullscreen);
         }
-  
+
         if (!Browser.fullscreenHandlersInstalled) {
           Browser.fullscreenHandlersInstalled = true;
           document.addEventListener('fullscreenchange', fullscreenChange, false);
@@ -6899,19 +6899,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           document.addEventListener('webkitfullscreenchange', fullscreenChange, false);
           document.addEventListener('MSFullscreenChange', fullscreenChange, false);
         }
-  
+
         // create a new parent to ensure the canvas has no siblings. this allows browsers to optimize full screen performance when its parent is the full screen root
         var canvasContainer = document.createElement("div");
         canvas.parentNode.insertBefore(canvasContainer, canvas);
         canvasContainer.appendChild(canvas);
-  
+
         // use parent of canvas as full screen root to allow aspect ratio correction (Firefox stretches the root to screen size)
         canvasContainer.requestFullscreen = canvasContainer['requestFullscreen'] ||
                                             canvasContainer['mozRequestFullScreen'] ||
                                             canvasContainer['msRequestFullscreen'] ||
                                            (canvasContainer['webkitRequestFullscreen'] ? () => canvasContainer['webkitRequestFullscreen'](Element['ALLOW_KEYBOARD_INPUT']) : null) ||
                                            (canvasContainer['webkitRequestFullScreen'] ? () => canvasContainer['webkitRequestFullScreen'](Element['ALLOW_KEYBOARD_INPUT']) : null);
-  
+
         canvasContainer.requestFullscreen();
       },requestFullScreen:function() {
         abort('Module.requestFullScreen has been replaced by Module.requestFullscreen (without a capital S)');
@@ -6922,7 +6922,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         if (!Browser.isFullscreen) {
           return false;
         }
-  
+
         var CFS = document['exitFullscreen'] ||
                   document['cancelFullScreen'] ||
                   document['mozCancelFullScreen'] ||
@@ -6956,9 +6956,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         // See https://github.com/libsdl-org/SDL/pull/6304
         return safeSetTimeout(func, timeout);
       },safeRequestAnimationFrame:function(func) {
-        
+
         return Browser.requestAnimationFrame(() => {
-          
+
           callUserCallback(func);
         });
       },getMimetype:function(name) {
@@ -7033,7 +7033,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             Browser.mouseMovementX = Browser.getMovementX(event);
             Browser.mouseMovementY = Browser.getMovementY(event);
           }
-  
+
           // check if SDL is available
           if (typeof SDL != "undefined") {
             Browser.mouseX = SDL.mouseX + Browser.mouseMovementX;
@@ -7050,7 +7050,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           var rect = Module["canvas"].getBoundingClientRect();
           var cw = Module["canvas"].width;
           var ch = Module["canvas"].height;
-  
+
           // Neither .scrollX or .pageXOffset are defined in a spec, but
           // we prefer .scrollX because it is currently in a spec draft.
           // (see: http://www.w3.org/TR/2013/WD-cssom-view-20131217/)
@@ -7059,21 +7059,21 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // If this assert lands, it's likely because the browser doesn't support scrollX or pageXOffset
           // and we have no viable fallback.
           assert((typeof scrollX != 'undefined') && (typeof scrollY != 'undefined'), 'Unable to retrieve scroll position, mouse positions likely broken.');
-  
+
           if (event.type === 'touchstart' || event.type === 'touchend' || event.type === 'touchmove') {
             var touch = event.touch;
             if (touch === undefined) {
               return; // the "touch" property is only defined in SDL
-  
+
             }
             var adjustedX = touch.pageX - (scrollX + rect.left);
             var adjustedY = touch.pageY - (scrollY + rect.top);
-  
+
             adjustedX = adjustedX * (cw / rect.width);
             adjustedY = adjustedY * (ch / rect.height);
-  
+
             var coords = { x: adjustedX, y: adjustedY };
-  
+
             if (event.type === 'touchstart') {
               Browser.lastTouches[touch.identifier] = coords;
               Browser.touches[touch.identifier] = coords;
@@ -7085,16 +7085,16 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             }
             return;
           }
-  
+
           var x = event.pageX - (scrollX + rect.left);
           var y = event.pageY - (scrollY + rect.top);
-  
+
           // the canvas might be CSS-scaled compared to its backbuffer;
           // SDL-using content will want mouse coordinates in terms
           // of backbuffer units.
           x = x * (cw / rect.width);
           y = y * (ch / rect.height);
-  
+
           Browser.mouseMovementX = x - Browser.mouseX;
           Browser.mouseMovementY = y - Browser.mouseY;
           Browser.mouseX = x;
@@ -7173,14 +7173,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function _emscripten_set_main_loop_timing(mode, value) {
       Browser.mainLoop.timingMode = mode;
       Browser.mainLoop.timingValue = value;
-  
+
       if (!Browser.mainLoop.func) {
         err('emscripten_set_main_loop_timing: Cannot set timing mode for main loop since a main loop does not exist! Call emscripten_set_main_loop first to set one up.');
         return 1; // Return non-zero on failure, can't set timing mode when there is no main loop.
       }
-  
+
       if (!Browser.mainLoop.running) {
-        
+
         Browser.mainLoop.running = true;
       }
       if (mode == 0) {
@@ -7225,28 +7225,28 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return 0;
     }
-  
-  
-  
+
+
+
     /**
      * @param {number=} arg
      * @param {boolean=} noSetTiming
      */
   function setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop, arg, noSetTiming) {
       assert(!Browser.mainLoop.func, 'emscripten_set_main_loop: there can only be one main loop function at once: call emscripten_cancel_main_loop to cancel the previous one before setting a new one with different parameters.');
-  
+
       Browser.mainLoop.func = browserIterationFunc;
       Browser.mainLoop.arg = arg;
-  
+
       var thisMainLoopId = Browser.mainLoop.currentlyRunningMainloop;
       function checkIsRunning() {
         if (thisMainLoopId < Browser.mainLoop.currentlyRunningMainloop) {
-          
+
           return false;
         }
         return true;
       }
-  
+
       // We create the loop runner here but it is not actually running until
       // _emscripten_set_main_loop_timing is called (which might happen a
       // later time).  This member signifies that the current runner has not
@@ -7272,17 +7272,17 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           }
           out('main loop blocker "' + blocker.name + '" took ' + (Date.now() - start) + ' ms'); //, left: ' + Browser.mainLoop.remainingBlockers);
           Browser.mainLoop.updateStatus();
-  
+
           // catches pause/resume main loop from blocker execution
           if (!checkIsRunning()) return;
-  
+
           setTimeout(Browser.mainLoop.runner, 0);
           return;
         }
-  
+
         // catch pauses from non-main loop sources
         if (!checkIsRunning()) return;
-  
+
         // Implement very basic swap interval control
         Browser.mainLoop.currentFrameNumber = Browser.mainLoop.currentFrameNumber + 1 | 0;
         if (Browser.mainLoop.timingMode == 1 && Browser.mainLoop.timingValue > 1 && Browser.mainLoop.currentFrameNumber % Browser.mainLoop.timingValue != 0) {
@@ -7292,31 +7292,31 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else if (Browser.mainLoop.timingMode == 0) {
           Browser.mainLoop.tickStartTime = _emscripten_get_now();
         }
-  
+
         // Signal GL rendering layer that processing of a new frame is about to start. This helps it optimize
         // VBO double-buffering and reduce GPU stalls.
-  
+
         if (Browser.mainLoop.method === 'timeout' && Module.ctx) {
           warnOnce('Looks like you are rendering without using requestAnimationFrame for the main loop. You should use 0 for the frame rate in emscripten_set_main_loop in order to use requestAnimationFrame, as that can greatly improve your frame rates!');
           Browser.mainLoop.method = ''; // just warn once per call to set main loop
         }
-  
+
         Browser.mainLoop.runIter(browserIterationFunc);
-  
+
         checkStackCookie();
-  
+
         // catch pauses from the main loop itself
         if (!checkIsRunning()) return;
-  
+
         // Queue new audio data. This is important to be right after the main loop invocation, so that we will immediately be able
         // to queue the newest produced audio samples.
         // TODO: Consider adding pre- and post- rAF callbacks so that GL.newRenderingFrameStarted() and SDL.audio.queueNewAudioData()
         //       do not need to be hardcoded into this function, but can be more generic.
         if (typeof SDL == 'object' && SDL.audio && SDL.audio.queueNewAudioData) SDL.audio.queueNewAudioData();
-  
+
         Browser.mainLoop.scheduler();
       }
-  
+
       if (!noSetTiming) {
         if (fps && fps > 0) {
           _emscripten_set_main_loop_timing(0, 1000.0 / fps);
@@ -7324,35 +7324,35 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // Do rAF by rendering each frame (no decimating)
           _emscripten_set_main_loop_timing(1, 1);
         }
-  
+
         Browser.mainLoop.scheduler();
       }
-  
+
       if (simulateInfiniteLoop) {
         throw 'unwind';
       }
     }
-  
+
   var _emscripten_set_main_loop = function(func, fps, simulateInfiniteLoop) {
       var browserIterationFunc = (() => dynCall_v.call(null, func));
       setMainLoop(browserIterationFunc, fps, simulateInfiniteLoop);
     };
 
-  
-  
-  
+
+
+
   function registerTouchEventCallback(target, userData, useCapture, callbackfunc, eventTypeId, eventTypeString, targetThread) {
       if (!JSEvents.touchEvent) JSEvents.touchEvent = _malloc( 1696 );
-  
+
       target = findEventTarget(target);
-  
+
       var touchEventHandlerFunc = function(e) {
         assert(e);
         var t, touches = {}, et = e.touches;
-        // To ease marshalling different kinds of touches that browser reports (all touches are listed in e.touches, 
+        // To ease marshalling different kinds of touches that browser reports (all touches are listed in e.touches,
         // only changed touches in e.changedTouches, and touches on target at a.targetTouches), mark a boolean in
         // each Touch object so that we can later loop only once over all touches we see to marshall over to Wasm.
-  
+
         for (var i = 0; i < et.length; ++i) {
           t = et[i];
           // Browser might recycle the generated Touch objects between each frame (Firefox on Android), so reset any
@@ -7370,7 +7370,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         for (var i = 0; i < e.targetTouches.length; ++i) {
           touches[e.targetTouches[i].identifier].onTarget = 1;
         }
-  
+
         var touchEvent = JSEvents.touchEvent;
         HEAPF64[((touchEvent)>>3)] = e.timeStamp;
         var idx = touchEvent>>2; // Pre-shift the ptr to index to HEAP32 to save code size
@@ -7394,18 +7394,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           HEAP32[idx + 8] = t.onTarget;
           HEAP32[idx + 9] = t.clientX - targetRect.left;
           HEAP32[idx + 10] = t.clientY - targetRect.top;
-  
+
           idx += 13;
-  
+
           if (++numTouches > 31) {
             break;
           }
         }
         HEAP32[(((touchEvent)+(8))>>2)] = numTouches;
-  
+
         if (((a1, a2, a3) => dynCall_iiii.apply(null, [callbackfunc, a1, a2, a3]))(eventTypeId, touchEvent, userData)) e.preventDefault();
       };
-  
+
       var eventHandler = {
         target,
         allowsDeferredCalls: eventTypeString == 'touchstart' || eventTypeString == 'touchend',
@@ -7433,7 +7433,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
     }
 
   var ENV = {};
-  
+
   var getExecutableName = () => {
       return thisProgram || './this.program';
     };
@@ -7467,7 +7467,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return getEnvStrings.strings;
     };
-  
+
   var stringToAscii = (str, buffer) => {
       for (var i = 0; i < str.length; ++i) {
         assert(str.charCodeAt(i) === (str.charCodeAt(i) & 0xff));
@@ -7476,7 +7476,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       // Null-terminate the string
       HEAP8[((buffer)>>0)] = 0;
     };
-  
+
   var _environ_get = (__environ, environ_buf) => {
       var bufSize = 0;
       getEnvStrings().forEach(function(string, i) {
@@ -7488,7 +7488,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       return 0;
     };
 
-  
+
   var _environ_sizes_get = (penviron_count, penviron_buf_size) => {
       var strings = getEnvStrings();
       HEAPU32[((penviron_count)>>2)] = strings.length;
@@ -7503,7 +7503,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
   function _fd_close(fd) {
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       FS.close(stream);
       return 0;
@@ -7530,10 +7530,10 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return ret;
     };
-  
+
   function _fd_read(fd, iov, iovcnt, pnum) {
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       var num = doReadv(stream, iov, iovcnt);
       HEAPU32[((pnum)>>2)] = num;
@@ -7544,14 +7544,14 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   }
   }
 
-  
-  
-  
-  
-  
+
+
+
+
+
   function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {
   try {
-  
+
       var offset = convertI32PairToI53Checked(offset_low, offset_high); if (isNaN(offset)) return 61;
       var stream = SYSCALLS.getStreamFromFD(fd);
       FS.llseek(stream, offset, whence);
@@ -7580,10 +7580,10 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return ret;
     };
-  
+
   function _fd_write(fd, iov, iovcnt, pnum) {
   try {
-  
+
       var stream = SYSCALLS.getStreamFromFD(fd);
       var num = doWritev(stream, iov, iovcnt);
       HEAPU32[((pnum)>>2)] = num;
@@ -7655,9 +7655,9 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
 
 
-  
-  
-  
+
+
+
   /** @constructor */
   function GLFW_Window(id, width, height, title, monitor, share) {
         this.id = id;
@@ -7702,10 +7702,10 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         this.charFunc = null; // GLFWcharfun
         this.userptr = null;
       }
-  
-  
-  
-  
+
+
+
+
   var GLFW = {WindowFromId:function(id) {
         if (id <= 0 || !GLFW.windows) return null;
         return GLFW.windows[id - 1];
@@ -7762,7 +7762,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           case 0xDC:return 92; // DOM_VK_BACKSLASH -> GLFW_KEY_BACKSLASH
           case 0xDD:return 93; // DOM_VK_CLOSE_BRACKET -> GLFW_KEY_RIGHT_BRACKET
           case 0xC0:return 96; // DOM_VK_BACK_QUOTE -> GLFW_KEY_GRAVE_ACCENT
-  
+
           case 0x1B:return 256; // DOM_VK_ESCAPE -> GLFW_KEY_ESCAPE
           case 0x0D:return 257; // DOM_VK_RETURN -> GLFW_KEY_ENTER
           case 0x09:return 258; // DOM_VK_TAB -> GLFW_KEY_TAB
@@ -7847,22 +7847,22 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },onKeyPress:function(event) {
         if (!GLFW.active || !GLFW.active.charFunc) return;
         if (event.ctrlKey || event.metaKey) return;
-  
+
         // correct unicode charCode is only available with onKeyPress event
         var charCode = event.charCode;
         if (charCode == 0 || (charCode >= 0x00 && charCode <= 0x1F)) return;
-  
+
         ((a1, a2) => dynCall_vii.apply(null, [GLFW.active.charFunc, a1, a2]))(GLFW.active.id, charCode);
       },onKeyChanged:function(keyCode, status) {
         if (!GLFW.active) return;
-  
+
         var key = GLFW.DOMToGLFWKeyCode(keyCode);
         if (key == -1) return;
-  
+
         var repeat = status && GLFW.active.keys[key];
         GLFW.active.keys[key] = status;
         GLFW.active.domKeys[keyCode] = status;
-  
+
         if (GLFW.active.keyFunc) {
           if (repeat) status = 2; // GLFW_REPEAT
           ((a1, a2, a3, a4, a5) => dynCall_viiiii.apply(null, [GLFW.active.keyFunc, a1, a2, a3, a4, a5]))(GLFW.active.id, key, keyCode, status, GLFW.getModBits(GLFW.active));
@@ -7873,7 +7873,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         GLFW.refreshJoysticks();
       },onKeydown:function(event) {
         GLFW.onKeyChanged(event.keyCode, 1); // GLFW_PRESS or GLFW_REPEAT
-  
+
         // This logic comes directly from the sdl implementation. We cannot
         // call preventDefault on all keydown events otherwise onKeyPress will
         // not get called
@@ -7884,7 +7884,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         GLFW.onKeyChanged(event.keyCode, 0); // GLFW_RELEASE
       },onBlur:function(event) {
         if (!GLFW.active) return;
-  
+
         for (var i = 0; i < GLFW.active.domKeys.length; ++i) {
           if (GLFW.active.domKeys[i]) {
             GLFW.onKeyChanged(i, 0); // GLFW_RELEASE
@@ -7892,11 +7892,11 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       },onMousemove:function(event) {
         if (!GLFW.active) return;
-  
+
         Browser.calculateMouseEvent(event);
-  
+
         if (event.target != Module["canvas"] || !GLFW.active.cursorPosFunc) return;
-  
+
         if (GLFW.active.cursorPosFunc) {
           ((a1, a2, a3) => dynCall_vidd.apply(null, [GLFW.active.cursorPosFunc, a1, a2, a3]))(GLFW.active.id, Browser.mouseX, Browser.mouseY);
         }
@@ -7914,29 +7914,29 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         return eventButton;
       },onMouseenter:function(event) {
         if (!GLFW.active) return;
-  
+
         if (event.target != Module["canvas"]) return;
-  
+
         if (GLFW.active.cursorEnterFunc) {
           ((a1, a2) => dynCall_vii.apply(null, [GLFW.active.cursorEnterFunc, a1, a2]))(GLFW.active.id, 1);
         }
       },onMouseleave:function(event) {
         if (!GLFW.active) return;
-  
+
         if (event.target != Module["canvas"]) return;
-  
+
         if (GLFW.active.cursorEnterFunc) {
           ((a1, a2) => dynCall_vii.apply(null, [GLFW.active.cursorEnterFunc, a1, a2]))(GLFW.active.id, 0);
         }
       },onMouseButtonChanged:function(event, status) {
         if (!GLFW.active) return;
-  
+
         Browser.calculateMouseEvent(event);
-  
+
         if (event.target != Module["canvas"]) return;
-  
+
         var eventButton = GLFW.DOMToGLFWMouseButton(event);
-  
+
         if (status == 1) { // GLFW_PRESS
           GLFW.active.buttons |= (1 << eventButton);
           try {
@@ -7945,7 +7945,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else {  // GLFW_RELEASE
           GLFW.active.buttons &= ~(1 << eventButton);
         }
-  
+
         if (GLFW.active.mouseButtonFunc) {
           ((a1, a2, a3, a4) => dynCall_viiii.apply(null, [GLFW.active.mouseButtonFunc, a1, a2, a3, a4]))(GLFW.active.id, eventButton, status, GLFW.getModBits(GLFW.active));
         }
@@ -7960,7 +7960,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         var delta = -Browser.getMouseWheelDelta(event);
         delta = (delta == 0) ? 0 : (delta > 0 ? Math.max(delta, 1) : Math.min(delta, -1)); // Quantize to integer so that minimum scroll is at least +/- 1.
         GLFW.wheelPos += delta;
-  
+
         if (!GLFW.active || !GLFW.active.scrollFunc || event.target != Module['canvas']) return;
         var sx = 0;
         var sy = delta;
@@ -7969,15 +7969,15 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else {
           sx = event.deltaX;
         }
-  
+
         ((a1, a2, a3) => dynCall_vidd.apply(null, [GLFW.active.scrollFunc, a1, a2, a3]))(GLFW.active.id, sx, sy);
-  
+
         event.preventDefault();
       },onCanvasResize:function(width, height) {
         if (!GLFW.active) return;
-  
+
         var resizeNeeded = true;
-  
+
         // If the client is requesting fullscreen mode
         if (document["fullscreen"] || document["fullScreen"] || document["mozFullScreen"] || document["webkitIsFullScreen"]) {
           GLFW.active.storedX = GLFW.active.x;
@@ -7988,7 +7988,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           GLFW.active.width = screen.width;
           GLFW.active.height = screen.height;
           GLFW.active.fullscreen = true;
-  
+
         // If the client is reverting from fullscreen mode
         } else if (GLFW.active.fullscreen == true) {
           GLFW.active.x = GLFW.active.storedX;
@@ -7996,7 +7996,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           GLFW.active.width = GLFW.active.storedWidth;
           GLFW.active.height = GLFW.active.storedHeight;
           GLFW.active.fullscreen = false;
-  
+
         // If the width/height values do not match current active window sizes
         } else if (GLFW.active.width != width || GLFW.active.height != height) {
             GLFW.active.width = width;
@@ -8004,7 +8004,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         } else {
           resizeNeeded = false;
         }
-  
+
         // If any of the above conditions were true, we need to resize the canvas
         if (resizeNeeded) {
           // resets the canvas size to counter the aspect preservation of Browser.updateCanvasDimensions
@@ -8016,20 +8016,20 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         }
       },onWindowSizeChanged:function() {
         if (!GLFW.active) return;
-  
+
         if (GLFW.active.windowSizeFunc) {
           ((a1, a2, a3) => dynCall_viii.apply(null, [GLFW.active.windowSizeFunc, a1, a2, a3]))(GLFW.active.id, GLFW.active.width, GLFW.active.height);
         }
       },onFramebufferSizeChanged:function() {
         if (!GLFW.active) return;
-  
+
         if (GLFW.active.framebufferSizeFunc) {
           ((a1, a2, a3) => dynCall_viii.apply(null, [GLFW.active.framebufferSizeFunc, a1, a2, a3]))(GLFW.active.id, GLFW.active.width, GLFW.active.height);
         }
       },onWindowContentScaleChanged:function(scale) {
         GLFW.scale = scale;
         if (!GLFW.active) return;
-  
+
         if (GLFW.active.windowContentScaleFunc) {
           ((a1, a2, a3) => dynCall_viff.apply(null, [GLFW.active.windowContentScaleFunc, a1, a2, a3]))(GLFW.active.id, GLFW.scale, GLFW.scale);
         }
@@ -8038,7 +8038,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },setWindowTitle:function(winid, title) {
         var win = GLFW.WindowFromId(winid);
         if (!win) return;
-  
+
         win.title = UTF8ToString(title);
         if (GLFW.active.id == win.id) {
           document.title = win.title;
@@ -8051,10 +8051,10 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         if (Browser.mainLoop.currentFrameNumber !== GLFW.lastGamepadStateFrame || !Browser.mainLoop.currentFrameNumber) {
           GLFW.lastGamepadState = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
           GLFW.lastGamepadStateFrame = Browser.mainLoop.currentFrameNumber;
-  
+
           for (var joy = 0; joy < GLFW.lastGamepadState.length; ++joy) {
             var gamepad = GLFW.lastGamepadState[joy];
-  
+
             if (gamepad) {
               if (!GLFW.joys[joy]) {
                 out('glfw joystick connected:',joy);
@@ -8065,33 +8065,33 @@ function GetCanvasHeight() { return canvas.clientHeight; }
                   buttons: _malloc(gamepad.buttons.length),
                   axes: _malloc(gamepad.axes.length*4),
                 };
-  
+
                 if (GLFW.joystickFunc) {
                   ((a1, a2) => dynCall_vii.apply(null, [GLFW.joystickFunc, a1, a2]))(joy, 0x00040001); // GLFW_CONNECTED
                 }
               }
-  
+
               var data = GLFW.joys[joy];
-  
+
               for (var i = 0; i < gamepad.buttons.length;  ++i) {
                 HEAP8[((data.buttons + i)>>0)] = gamepad.buttons[i].pressed;
               }
-  
+
               for (var i = 0; i < gamepad.axes.length; ++i) {
                 HEAPF32[((data.axes + i*4)>>2)] = gamepad.axes[i];
               }
             } else {
               if (GLFW.joys[joy]) {
                 out('glfw joystick disconnected',joy);
-  
+
                 if (GLFW.joystickFunc) {
                   ((a1, a2) => dynCall_vii.apply(null, [GLFW.joystickFunc, a1, a2]))(joy, 0x00040002); // GLFW_DISCONNECTED
                 }
-  
+
                 _free(GLFW.joys[joy].id);
                 _free(GLFW.joys[joy].buttons);
                 _free(GLFW.joys[joy].axes);
-  
+
                 delete GLFW.joys[joy];
               }
             }
@@ -8136,18 +8136,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },onDrop:function(event) {
         if (!GLFW.active || !GLFW.active.dropFunc) return;
         if (!event.dataTransfer || !event.dataTransfer.files || event.dataTransfer.files.length == 0) return;
-  
+
         event.preventDefault();
-  
+
         var filenames = _malloc(event.dataTransfer.files.length*4);
         var filenamesArray = [];
         var count = event.dataTransfer.files.length;
-  
+
         // Read and save the files to emscripten's FS
         var written = 0;
         var drop_dir = '.glfw_dropped_files';
         FS.createPath('/', drop_dir);
-  
+
         function save(file) {
           var path = '/' + drop_dir + '/' + file.name.replace(/\//g, '_');
           var reader = new FileReader();
@@ -8157,12 +8157,12 @@ function GetCanvasHeight() { return canvas.clientHeight; }
               out('failed to read dropped file: '+file.name+': '+reader.error);
               return;
             }
-  
+
             var data = e.target.result;
             FS.writeFile(path, new Uint8Array(data));
             if (++written === count) {
               ((a1, a2, a3) => dynCall_viii.apply(null, [GLFW.active.dropFunc, a1, a2, a3]))(GLFW.active.id, count, filenames);
-  
+
               for (var i = 0; i < filenamesArray.length; ++i) {
                 _free(filenamesArray[i]);
               }
@@ -8170,20 +8170,20 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             }
           };
           reader.readAsArrayBuffer(file);
-  
+
           var filename = stringToNewUTF8(path);
           filenamesArray.push(filename);
           HEAPU32[((filenames + i*4)>>2)] = filename;
         }
-  
+
         for (var i = 0; i < count; ++i) {
           save(event.dataTransfer.files[i]);
         }
-  
+
         return false;
       },onDragover:function(event) {
         if (!GLFW.active || !GLFW.active.dropFunc) return;
-  
+
         event.preventDefault();
         return false;
       },setWindowSizeCallback:function(winid, cbfun) {
@@ -8191,7 +8191,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         if (!win) return null;
         var prevcbfun = win.windowSizeFunc;
         win.windowSizeFunc = cbfun;
-  
+
         return prevcbfun;
       },setWindowCloseCallback:function(winid, cbfun) {
         var win = GLFW.WindowFromId(winid);
@@ -8213,7 +8213,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },setInputMode:function(winid, mode, value) {
         var win = GLFW.WindowFromId(winid);
         if (!win) return;
-  
+
         switch (mode) {
           case 0x00033001: { // GLFW_CURSOR
             switch (value) {
@@ -8279,17 +8279,17 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },getWindowPos:function(winid, x, y) {
         var wx = 0;
         var wy = 0;
-  
+
         var win = GLFW.WindowFromId(winid);
         if (win) {
           wx = win.x;
           wy = win.y;
         }
-  
+
         if (x) {
           HEAP32[((x)>>2)] = wx;
         }
-  
+
         if (y) {
           HEAP32[((y)>>2)] = wy;
         }
@@ -8301,24 +8301,24 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       },getWindowSize:function(winid, width, height) {
         var ww = 0;
         var wh = 0;
-  
+
         var win = GLFW.WindowFromId(winid);
         if (win) {
           ww = win.width;
           wh = win.height;
         }
-  
+
         if (width) {
           HEAP32[((width)>>2)] = ww;
         }
-  
+
         if (height) {
           HEAP32[((height)>>2)] = wh;
         }
       },setWindowSize:function(winid, width, height) {
         var win = GLFW.WindowFromId(winid);
         if (!win) return;
-  
+
         if (GLFW.active.id == win.id) {
           if (width == screen.width && height == screen.height) {
             Browser.requestFullscreen();
@@ -8329,7 +8329,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             win.height = height;
           }
         }
-  
+
         if (win.windowSizeFunc) {
           ((a1, a2, a3) => dynCall_viii.apply(null, [win.windowSizeFunc, a1, a2, a3]))(win.id, width, height);
         }
@@ -8339,19 +8339,19 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // no-op
         }
         if (i > 0) throw "glfwCreateWindow only supports one window at time currently";
-  
+
         // id for window
         id = i + 1;
-  
+
         // not valid
         if (width <= 0 || height <= 0) return 0;
-  
+
         if (monitor) {
           Browser.requestFullscreen();
         } else {
           Browser.setCanvasSize(width, height);
         }
-  
+
         // Create context when there are no existing alive windows
         for (i = 0; i < GLFW.windows.length && GLFW.windows[i] == null; i++) {
           // no-op
@@ -8370,38 +8370,38 @@ function GetCanvasHeight() { return canvas.clientHeight; }
             Browser.init();
           }
         }
-  
+
         // If context creation failed, do not return a valid window
         if (!Module.ctx && useWebGL) return 0;
-  
+
         // Get non alive id
         var win = new GLFW_Window(id, width, height, title, monitor, share);
-  
+
         // Set window to array
         if (id - 1 == GLFW.windows.length) {
           GLFW.windows.push(win);
         } else {
           GLFW.windows[id - 1] = win;
         }
-  
+
         GLFW.active = win;
         return win.id;
       },destroyWindow:function(winid) {
         var win = GLFW.WindowFromId(winid);
         if (!win) return;
-  
+
         if (win.windowCloseFunc) {
           ((a1) => dynCall_vi.apply(null, [win.windowCloseFunc, a1]))(win.id);
         }
-  
+
         GLFW.windows[win.id - 1] = null;
         if (GLFW.active.id == win.id)
           GLFW.active = null;
-  
+
         // Destroy context when no alive windows
         for (var i = 0; i < GLFW.windows.length; i++)
           if (GLFW.windows[i] !== null) return;
-  
+
         Module.ctx = Browser.destroyContext(Module['canvas'], true, true);
       },swapBuffers:function(winid) {
       },GLFW2ParamToGLFW3Param:function(param) {
@@ -8463,18 +8463,18 @@ function GetCanvasHeight() { return canvas.clientHeight; }
   function _emscripten_get_device_pixel_ratio() {
       return (typeof devicePixelRatio == 'number' && devicePixelRatio) || 1.0;
     }
-  
-  
-  
+
+
+
   function _glfwInit() {
       if (GLFW.windows) return 1; // GL_TRUE
-  
+
       GLFW.initialTime = GLFW.getTime();
       GLFW.hints = GLFW.defaultHints;
       GLFW.windows = new Array()
       GLFW.active = null;
       GLFW.scale  = _emscripten_get_device_pixel_ratio();
-  
+
       window.addEventListener("gamepadconnected", GLFW.onGamepadConnected, true);
       window.addEventListener("gamepaddisconnected", GLFW.onGamepadDisconnected, true);
       window.addEventListener("keydown", GLFW.onKeydown, true);
@@ -8501,7 +8501,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       Module["canvas"].addEventListener('mouseleave', GLFW.onMouseleave, true);
       Module["canvas"].addEventListener('drop', GLFW.onDrop, true);
       Module["canvas"].addEventListener('dragover', GLFW.onDragover, true);
-  
+
       Browser.resizeListeners.push((width, height) => {
          GLFW.onCanvasResize(width, height);
       });
@@ -8578,7 +8578,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       GLFW.swapBuffers(winid);
     }
 
-  
+
   function _glfwSwapInterval(interval) {
       interval = Math.abs(interval); // GLFW uses negative values to enable GLX_EXT_swap_control_tear, which we don't have, so just treat negative and positive the same.
       if (interval == 0) _emscripten_set_main_loop_timing(0, 0);
@@ -8605,7 +8605,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       Module["canvas"].removeEventListener('mouseleave', GLFW.onMouseleave, true);
       Module["canvas"].removeEventListener('drop', GLFW.onDrop, true);
       Module["canvas"].removeEventListener('dragover', GLFW.onDragover, true);
-  
+
       Module["canvas"].width = Module["canvas"].height = 1;
       GLFW.windows = null;
       GLFW.active = null;
@@ -8617,7 +8617,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
 
 
 
-  
+
   var stringToUTF8OnStack = (str) => {
       var size = lengthBytesUTF8(str) + 1;
       var ret = stackAlloc(size);
@@ -8633,8 +8633,8 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         abort(e);
       }
     }
-  
-  
+
+
   function sigToWasmTypes(sig) {
       assert(!sig.includes('j'), 'i64 not permitted in function signatures when WASM_BIGINT is disabled');
       var typeNames = {
@@ -8654,20 +8654,20 @@ function GetCanvasHeight() { return canvas.clientHeight; }
       }
       return type;
     }
-  
+
   var runtimeKeepalivePush = () => {
       runtimeKeepaliveCounter += 1;
     };
-  
+
   var runtimeKeepalivePop = () => {
       assert(runtimeKeepaliveCounter > 0);
       runtimeKeepaliveCounter -= 1;
     };
-  
-  
+
+
   var Asyncify = {instrumentWasmImports:function(imports) {
         var importPatterns = [/^invoke_.*$/,/^fd_sync$/,/^__wasi_fd_sync$/,/^__asyncjs__.*$/,/^emscripten_promise_await$/,/^emscripten_idb_load$/,/^emscripten_idb_store$/,/^emscripten_idb_delete$/,/^emscripten_idb_exists$/,/^emscripten_idb_load_blob$/,/^emscripten_idb_store_blob$/,/^emscripten_sleep$/,/^emscripten_wget$/,/^emscripten_wget_data$/,/^emscripten_scan_registers$/,/^emscripten_lazy_load_code$/,/^_load_secondary_module$/,/^emscripten_fiber_swap$/,/^SDL_Delay$/];
-  
+
         for (var x in imports) {
           (function(x) {
             var original = imports[x];
@@ -8745,7 +8745,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
           // the dbg() function itself can call back into WebAssembly to get the
           // current pthread_self() pointer).
           Asyncify.state = Asyncify.State.Normal;
-          
+
           // Keep the runtime alive so that a re-wind can be done later.
           runAndAbortIfError(_asyncify_stop_unwind);
           if (typeof Fibers != 'undefined') {
@@ -8787,7 +8787,7 @@ function GetCanvasHeight() { return canvas.clientHeight; }
         var start = Asyncify.getDataRewindFunc(ptr);
         // Once we have rewound and the stack we no longer need to artificially
         // keep the runtime alive.
-        
+
         return start();
       },handleSleep:function(startAsync) {
         assert(Asyncify.state !== Asyncify.State.Disabled, 'Asyncify cannot be done during or after the runtime exits');
