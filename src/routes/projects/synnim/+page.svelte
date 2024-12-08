@@ -8,14 +8,21 @@
 
 <div class="px-10">
     <h1 class="font-bold text-3xl p-5">Synnim</h1>
-    <iframe
-        title="synnim-wasm"
-        src="/project-media/synnim-wasm/index.html"
-        frameborder="0"
-        scrolling="no"
-    >
-        ></iframe
-    >
+    <h2 class="font-bold text-lg p2">Browser Demo</h2>
+    <div class="content flex flex-col justify-center align-center">
+        <iframe
+            title="synnim-wasm"
+            src="/project-media/synnim-wasm/index.html"
+            frameborder="0"
+            scrolling="no"
+        >
+            ></iframe
+        >
+        <div class="p-3" id="small-device">
+            <div class="mb-1 skeleton w-48 h-32"></div>
+            <h2 class="text-error">Your Device is too small for the demo</h2>
+        </div>
+    </div>
     <div class="divider"></div>
     <div class="flex flex-col">
         <section>
@@ -97,5 +104,21 @@
     iframe {
         width: 800px;
         height: 450px;
+    }
+    #small-device {
+        visibility: hidden;
+        height: 0px;
+    }
+    @media (max-width: 823px) {
+        iframe {
+            visibility: hidden;
+            display: hidden;
+            height: 0px;
+        }
+        #small-device {
+            display: static;
+            visibility: visible;
+            height: auto;
+        }
     }
 </style>
