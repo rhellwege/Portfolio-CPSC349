@@ -45,22 +45,22 @@
     <title>Ryan Hellwege Portfolio | Projects</title>
 </svelte:head>
 
-<h1 class="text-5xl text-bold">Projects</h1>
-
-<ul class="flex flex-row flex-wrap justify-center align-text-bottom gap-9">
-    {#each projects as project}
-        <li class="">
-            <Card
-                title={project.title}
-                summary={project.summary}
-                preview={project.preview}
-                link={project.link}
-                tags={project.tags}
-                github={project.github}
-            />
-        </li>
-    {/each}
-</ul>
+<div id="main" class="flex items-center justify-center min-h-screen p-10">
+    <ul class="flex flex-row flex-wrap justify-center align-text-bottom gap-9">
+        {#each projects as project}
+            <li class="">
+                <Card
+                    title={project.title}
+                    summary={project.summary}
+                    preview={project.preview}
+                    link={project.link}
+                    tags={project.tags}
+                    github={project.github}
+                />
+            </li>
+        {/each}
+    </ul>
+</div>
 
 <style>
 </style>

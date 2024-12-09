@@ -5,7 +5,7 @@
     <title>Ryan Hellwege Portfolio | Contact</title>
 </svelte:head>
 
-<div id="main" class="mx-auto text-lg">
+<div id="main" class="mx-auto text-lg prose">
     <h1 id="title" class="font-bold text-3xl text-center py-5">Contact Me</h1>
     <br />
     <br />
@@ -27,7 +27,7 @@
         >
             <img src="/icons/github.svg" alt="" />
             <h2 class="font-bold text-lg">
-                Linkedin: <span class="link">https://github.com/rhellwege</span>
+                Github: <span class="link">https://github.com/rhellwege</span>
             </h2>
         </a>
     </div>
