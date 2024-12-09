@@ -6,8 +6,8 @@
 </svelte:head>
 
 <article id="main" class="prose mx-auto text-lg">
-    <h1 id="title" class="font-bold text-3xl text-center py-5">About</h1>
-    <br />
+    <h1 id="title" class="font-bold text-3xl pt-5">About</h1>
+    <div class="divider"></div>
     <p>
         I am a 22 year old fourth year computer science university student from
         California. I started programming as a hobby in 7th grade when I taught
@@ -33,6 +33,7 @@
             ><img src="/icons/download.svg" alt="" />Resume</button
         ></a
     >
+    <div class="divider"></div>
 </article>
 
 <style>

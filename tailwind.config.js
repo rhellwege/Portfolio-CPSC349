@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 import daisyui from "daisyui";
+import typography from "@tailwindcss/typography";
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
   theme: {
     extend: {},
   },
-  plugins: [require("@tailwindcss/typography"), daisyui],
+  plugins: [typography, daisyui],
   daisyui: {
     themes: ["emerald"], // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
     darkTheme: "emerald", // name of one of the included themes for dark mode

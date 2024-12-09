@@ -7,7 +7,8 @@
 </svelte:head>
 
 <div id="main" class="mx-auto text-lg">
-    <h1 id="title" class="font-bold text-5xl text-center py-5">Synnim</h1>
+    <h1 id="title" class="font-bold text-5xl text-center pt-5">Synnim</h1>
+    <div class="divider"></div>
     <h2 class="font-bold text-lg mb-2">Browser Demo</h2>
     <div class="content flex flex-col justify-center align-center">
         <iframe
