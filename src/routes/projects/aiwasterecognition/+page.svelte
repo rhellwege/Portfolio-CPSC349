@@ -5,7 +5,7 @@
     <title>Ryan Hellwege Portfolio | AI Waste Recognition</title>
 </svelte:head>
 
-<div id="main" class="mx-auto">
+<div id="main" class="mx-auto text-lg">
     <h1 id="title" class="font-bold text-5xl text-center py-5">
         AI Waste Recognition
     </h1>

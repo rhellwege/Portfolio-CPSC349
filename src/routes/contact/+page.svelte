@@ -5,7 +5,7 @@
     <title>Ryan Hellwege Portfolio | Contact</title>
 </svelte:head>
 
-<div id="main" class="mx-auto">
+<div id="main" class="mx-auto text-lg">
     <h1 id="title" class="font-bold text-3xl text-center py-5">Contact Me</h1>
     <br />
     <br />

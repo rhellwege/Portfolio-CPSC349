@@ -5,8 +5,10 @@
     <title>Ryan Hellwege Portfolio | Home</title>
 </svelte:head>
 
-<div id="main" class="hero bg-base-200 min-h-screen mx-auto">
-    <div class="hero-content glass p-6 rounded flex-col lg:flex-row-reverse">
+<div id="main" class="hero bg-base-200 min-h-screen mx-auto text-lg">
+    <div
+        class="hero-content bg-base-300 bg-opacity-85 p-6 rounded flex-col lg:flex-row-reverse"
+    >
         <img
             src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
             alt="profile"

@@ -5,7 +5,7 @@
     <title>Ryan Hellwege Portfolio | Mazer</title>
 </svelte:head>
 
-<div id="main" class="mx-auto">
+<div id="main" class="text-lg mx-auto">
     <h1 id="title" class="font-bold text-7xl text-center py-5">MAZER</h1>
     <section>
         <h2 class="font-bold text-lg mb-2">Overview</h2>

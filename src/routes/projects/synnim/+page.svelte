@@ -6,7 +6,7 @@
     <title>Ryan Hellwege Portfolio | Synnim</title>
 </svelte:head>
 
-<div id="main" class="mx-auto">
+<div id="main" class="mx-auto text-lg">
     <h1 id="title" class="font-bold text-5xl text-center py-5">Synnim</h1>
     <h2 class="font-bold text-lg mb-2">Browser Demo</h2>
     <div class="content flex flex-col justify-center align-center">

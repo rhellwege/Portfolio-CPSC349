@@ -9,3 +9,4 @@
 This project uses svelte for components and routing and tailwind for utility classes
 
 # Hosted at https://portfolio.rhellwege.xyz
+https://www.svgbackgrounds.com/set/free-svg-backgrounds-and-patterns/">Free SVG Backgrounds and Patterns by SVGBackgrounds.com
