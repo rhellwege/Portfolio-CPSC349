@@ -6,38 +6,30 @@
     <title>Ryan Hellwege Portfolio | Synnim</title>
 </svelte:head>
 
-<div id="main" class="mx-auto text-lg">
+<div id="main" class="mx-auto text-lg py-10 min-h-screen">
     <h1 id="title" class="font-bold text-5xl text-center pt-5">Synnim</h1>
     <div class="divider"></div>
-    <h2 class="font-bold text-lg mb-2">Browser Demo</h2>
+    <h2 class="text-center font-bold text-xl mb-5">Browser Demo</h2>
     <div class="content flex flex-col justify-center align-center">
         <iframe
             title="synnim-wasm"
             src="/project-media/synnim-wasm/index.html"
             frameborder="0"
             scrolling="no"
+            class="mx-auto"
         >
             ></iframe
         >
         <div class="p-3" id="small-device">
             <div class="mb-1 skeleton w-48 h-32"></div>
-            <h2 class="text-error">Your Device is too small for the demo</h2>
+            <h2 class="text-center text-error">
+                Your Device is too small for the demo
+            </h2>
         </div>
     </div>
-    <div class="divider"></div>
     <div class="flex flex-col">
         <section>
-            <h2 class="font-bold text-lg mb-2">Overview</h2>
-            <p>
-                The original purpose for this project was for me to learn about
-                the nim programming language and how audio synthesis works. Over
-                time, I realized you could compile the project to web-assembly
-                and use the browser directly.
-            </p>
-            <div class="divider"></div>
-        </section>
-        <section>
-            <h2 class="font-bold text-lg mb-2">Controls</h2>
+            <h2 class="text-center text-xl font-bold mb-2">Controls</h2>
             <div class="p-3">
                 <div class="my-1 flex w-full justify-center gap-1">
                     <kbd class="kbd">q</kbd>
@@ -83,7 +75,17 @@
             <div class="divider"></div>
         </section>
         <section>
-            <h2 class="font-bold text-lg mb-2">Technical Details</h2>
+            <h2 class="font-bold text-xl mb-2">Overview</h2>
+            <p>
+                The original purpose for this project was for me to learn about
+                the nim programming language and how audio synthesis works. Over
+                time, I realized you could compile the project to web-assembly
+                and use the browser directly.
+            </p>
+            <div class="divider"></div>
+        </section>
+        <section>
+            <h2 class="font-bold text-xl mb-2">Technical Details</h2>
             <p>
                 Nim uses C as a backend compiler so I decided to use C libraries
                 for interfacing directly with the audio device and I used raylib
@@ -117,7 +119,7 @@
         font-family: "Membra";
     }
     #main {
-        width: 80vw;
+        width: 70vw;
     }
     #small-device {
         visibility: hidden;
