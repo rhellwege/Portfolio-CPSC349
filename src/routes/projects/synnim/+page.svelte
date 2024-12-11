@@ -1,5 +1,4 @@
 <script>
-    import Collapse from "$lib/components/collapse/Collapse.svelte";
 </script>
 
 <svelte:head>

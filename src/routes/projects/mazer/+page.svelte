@@ -66,7 +66,7 @@
         font-family: "PerfectDark";
     }
     #main {
-        width: 80vw;
+        width: 70vw;
     }
     .gif {
         width: 400px;
