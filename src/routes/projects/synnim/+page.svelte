@@ -94,10 +94,6 @@
 </div>
 
 <style>
-    iframe {
-        width: 800px;
-        height: 450px;
-    }
     @font-face {
         font-family: "Membra";
         src: url("/fonts/membra.ttf");
@@ -110,21 +106,5 @@
     }
     #main {
         width: 70vw;
-    }
-    #small-device {
-        visibility: hidden;
-        height: 0px;
-    }
-    @media (max-width: 823px) {
-        iframe {
-            visibility: hidden;
-            display: hidden;
-            height: 0px;
-        }
-        #small-device {
-            display: static;
-            visibility: visible;
-            height: auto;
-        }
     }
 </style>
