@@ -10,7 +10,7 @@
         { title: "Skills", path: "/skills", icon: "/icons/wand-sparkles.svg" },
     ];
 
-    let isOpen = false;
+    let isOpen = $state(false);
 
     function toggleMenu() {
         isOpen = !isOpen;
@@ -28,7 +28,7 @@
             <a
                 href="/"
                 class="btn-ghost text-xl font-bold"
-                on:click={handleClose}>Ryan Hellwege Portfolio</a
+                onclick={handleClose}>Ryan Hellwege Portfolio</a
             >
         </div>
 
@@ -39,7 +39,7 @@
                 {#each navItems as { title, path, icon } (path)}
                     <li class="md:mr-5 overflow-hidden">
                         <a
-                            on:click={handleClose}
+                            onclick={handleClose}
                             href={path}
                             class={`btn btn-ghost text-lg hover:shadow-lg ${path === $page.url.pathname ? "font-bold text-primary" : ""}`}
                             aria-current={path === $page.url.pathname
@@ -57,17 +57,17 @@
         <button
             class="menu cursor-pointer flex flex-col gap-1 md:hidden"
             aria-label="Toggle navigation"
-            on:click={toggleMenu}
+            onclick={toggleMenu}
         >
             <div
                 class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "rotate-45" : ""}`}
-            />
+            ></div>
             <div
                 class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
-            />
+            ></div>
             <div
                 class={`w-6 h-1 bg-base-content transition-all duration-300 ${isOpen ? "-rotate-45" : ""}`}
-            />
+            ></div>
         </button>
     </div>
 </nav>

@@ -1,4 +1,6 @@
 <script>
+    //import BrowserDemo from "$lib/components/browserdemo/BrowserDemo.svelte";
+    import Collapse from "$lib/components/collapse/Collapse.svelte";
 </script>
 
 <svelte:head>
