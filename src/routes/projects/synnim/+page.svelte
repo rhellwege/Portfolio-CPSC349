@@ -1,4 +1,5 @@
 <script>
+    import BrowserDemo from "$lib/components/browserdemo/BrowserDemo.svelte";
 </script>
 
 <svelte:head>
@@ -8,71 +9,61 @@
 <div id="main" class="mx-auto text-lg py-10 min-h-screen">
     <h1 id="title" class="font-bold text-5xl text-center pt-5">Synnim</h1>
     <div class="divider"></div>
-    <h2 class="text-center font-bold text-xl mb-5">Browser Demo</h2>
-    <div class="content flex flex-col justify-center align-center">
-        <iframe
-            title="synnim-wasm"
-            src="/project-media/synnim-wasm/index.html"
-            frameborder="0"
-            scrolling="no"
-            class="mx-auto"
-        >
-            ></iframe
-        >
-        <div class="p-3" id="small-device">
-            <div class="mb-1 skeleton w-48 h-32"></div>
-            <h2 class="text-center text-error">
-                Your Device is too small for the demo
-            </h2>
-        </div>
-    </div>
     <div class="flex flex-col">
-        <section>
-            <h2 class="text-center text-xl font-bold mb-2">Controls</h2>
-            <div class="p-3">
-                <div class="my-1 flex w-full justify-center gap-1">
-                    <kbd class="kbd">q</kbd>
-                    <kbd class="kbd">w</kbd>
-                    <kbd class="kbd">e</kbd>
-                    <kbd class="kbd">r</kbd>
-                    <kbd class="kbd">t</kbd>
-                    <kbd class="kbd">y</kbd>
-                    <kbd class="kbd">u</kbd>
-                    <kbd class="kbd">i</kbd>
-                    <kbd class="kbd">o</kbd>
-                    <kbd class="kbd">p</kbd>
+        <BrowserDemo
+            title="Synnim Browser Demo"
+            link="/project-media/synnim-wasm/index.html"
+            width={800}
+            height={450}
+        >
+            <section>
+                <h2 class="text-center text-xl font-bold mb-2">Controls</h2>
+                <div class="p-3">
+                    <div class="my-1 flex w-full justify-center gap-1">
+                        <kbd class="kbd">q</kbd>
+                        <kbd class="kbd">w</kbd>
+                        <kbd class="kbd">e</kbd>
+                        <kbd class="kbd">r</kbd>
+                        <kbd class="kbd">t</kbd>
+                        <kbd class="kbd">y</kbd>
+                        <kbd class="kbd">u</kbd>
+                        <kbd class="kbd">i</kbd>
+                        <kbd class="kbd">o</kbd>
+                        <kbd class="kbd">p</kbd>
+                    </div>
+                    <div class="my-1 flex w-full justify-center gap-1">
+                        <kbd class="kbd">a</kbd>
+                        <kbd class="kbd text-primary border-primary">s</kbd>
+                        <kbd class="kbd">d</kbd>
+                        <kbd class="kbd text-primary border-primary">f</kbd>
+                        <kbd class="kbd text-primary border-primary">g</kbd>
+                        <kbd class="kbd">h</kbd>
+                        <kbd class="kbd text-primary border-primary">j</kbd>
+                        <kbd class="kbd text-primary border-primary">k</kbd>
+                        <kbd class="kbd text-primary border-primary">l</kbd>
+                    </div>
+                    <div class="my-1 flex w-full justify-center gap-1">
+                        <kbd class="kbd text-primary border-primary">z</kbd>
+                        <kbd class="kbd text-primary border-primary">x</kbd>
+                        <kbd class="kbd text-primary border-primary">c</kbd>
+                        <kbd class="kbd text-primary border-primary">v</kbd>
+                        <kbd class="kbd text-primary border-primary">b</kbd>
+                        <kbd class="kbd text-primary border-primary">n</kbd>
+                        <kbd class="kbd text-primary border-primary">m</kbd>
+                        <kbd class="kbd text-primary border-primary">,</kbd>
+                    </div>
                 </div>
-                <div class="my-1 flex w-full justify-center gap-1">
-                    <kbd class="kbd">a</kbd>
-                    <kbd class="kbd text-primary border-primary">s</kbd>
-                    <kbd class="kbd">d</kbd>
-                    <kbd class="kbd text-primary border-primary">f</kbd>
-                    <kbd class="kbd text-primary border-primary">g</kbd>
-                    <kbd class="kbd">h</kbd>
-                    <kbd class="kbd text-primary border-primary">j</kbd>
-                    <kbd class="kbd text-primary border-primary">k</kbd>
-                    <kbd class="kbd text-primary border-primary">l</kbd>
-                </div>
-                <div class="my-1 flex w-full justify-center gap-1">
-                    <kbd class="kbd text-primary border-primary">z</kbd>
-                    <kbd class="kbd text-primary border-primary">x</kbd>
-                    <kbd class="kbd text-primary border-primary">c</kbd>
-                    <kbd class="kbd text-primary border-primary">v</kbd>
-                    <kbd class="kbd text-primary border-primary">b</kbd>
-                    <kbd class="kbd text-primary border-primary">n</kbd>
-                    <kbd class="kbd text-primary border-primary">m</kbd>
-                    <kbd class="kbd text-primary border-primary">,</kbd>
-                </div>
-            </div>
-            <p>
-                You can use the 'z, s, x, d, c, v, g, b, h, n, m' keys which are
-                arranged like a musical keyboard starting from A natural. The
-                first dial in the top left controls volume, the second big dial
-                controls the baseline pitch and the last two dials are highpass
-                and lowpass filters.
-            </p>
-            <div class="divider"></div>
-        </section>
+                <p class="mx-auto" style="width: 50%">
+                    You can use the 'z, s, x, d, c, v, g, b, h, n, m' keys which
+                    are arranged like a musical keyboard starting from A
+                    natural. The first dial in the top left controls volume, the
+                    second big dial controls the baseline pitch and the last two
+                    dials are highpass and lowpass filters.
+                </p>
+                <div class="divider"></div>
+            </section></BrowserDemo
+        >
+        <div class="divider"></div>
         <section>
             <h2 class="font-bold text-xl mb-2">Overview</h2>
             <p>

@@ -14,7 +14,7 @@
 </script>
 
 <Collapse {title}>
-    <div class="content flex flex-col justify-center align-center">
+    <div class="content flex flex-col justify-center align-center mx-auto">
         <iframe
             {title}
             src={link}
@@ -32,7 +32,9 @@
                 Your Device is too small for the demo
             </h2>
         </div>
-        <slot />
+        <div class="text-center">
+            <slot />
+        </div>
     </div></Collapse
 >
 
@@ -41,7 +43,7 @@
         visibility: hidden;
         height: 0px;
     }
-    @media (max-width: 823px) {
+    @media (max-width: 750px) {
         iframe {
             visibility: hidden;
             display: hidden;

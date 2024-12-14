@@ -1,6 +1,5 @@
 <script>
-    //import BrowserDemo from "$lib/components/browserdemo/BrowserDemo.svelte";
-    import Collapse from "$lib/components/collapse/Collapse.svelte";
+    import BrowserDemo from "$lib/components/browserdemo/BrowserDemo.svelte";
 </script>
 
 <svelte:head>
@@ -10,6 +9,18 @@
 <div id="main" class="text-lg mx-auto">
     <h1 id="title" class="font-bold text-7xl text-center pt-5">MAZER</h1>
     <div class="divider"></div>
+    <section>
+        <BrowserDemo
+            title="Mazer Browser Demo"
+            link="/project-media/mazer-wasm/index.html"
+            width={800}
+            height={800}
+            >Try generating a maze by pressing the Generate button in the top
+            left pane, the the Solve button to solve the maze.</BrowserDemo
+        >
+
+        <div class="divider"></div>
+    </section>
     <section>
         <h2 class="font-bold text-lg mb-2">Overview</h2>
         <p>
