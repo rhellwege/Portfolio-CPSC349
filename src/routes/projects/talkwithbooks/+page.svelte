@@ -58,6 +58,9 @@
     }
     section {
         padding: 20px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
     img {
         max-height: 50vh;

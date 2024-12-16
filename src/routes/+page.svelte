@@ -10,7 +10,7 @@
         class="hero-content bg-base-300 bg-opacity-85 p-6 rounded flex-col lg:flex-row-reverse"
     >
         <img
-            src="https://img.daisyui.com/images/stock/photo-1635805737707-575885ab0820.webp"
+            src="/profile.png"
             alt="profile"
             class="max-w-sm rounded-lg shadow-2xl"
         />
