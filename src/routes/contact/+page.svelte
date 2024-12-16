@@ -5,16 +5,16 @@
     <title>Ryan Hellwege Portfolio | Contact</title>
 </svelte:head>
 
-<div id="main" class="mx-auto text-lg prose">
+<div id="main" class="mx-auto text-lg">
     <h1 id="title" class="font-bold text-3xl text-center py-5">Contact Me</h1>
     <br />
     <br />
-    <div class="flex flex-col md:flex-row justify-evenly gap-5">
+    <div class="flex flex-col justify-evenly gap-5">
         <a
-            class="flex-1 border-2 border-black bg-white p-6 rounded"
+            class="flex-1 border-2 border-black bg-white p-6 rounded flex flex-row gap-4"
             href="https://www.linkedin.com/in/ryan-hellwege-461b79289/"
         >
-            <img src="/icons/linkedin.svg" alt="" />
+            <img width="40" src="/icons/linkedin.svg" alt="" />
             <h2 class="font-bold text-lg">
                 Linkedin: <span class="link"
                     >https://www.linkedin.com/in/ryan-hellwege-461b79289/</span
@@ -22,10 +22,10 @@
             </h2>
         </a>
         <a
-            class="flex-1 border-2 border-black bg-white p-6 rounded"
+            class="flex-1 border-2 border-black bg-white p-6 rounded flex flex-row gap-4"
             href="https://github.com/rhellwege"
         >
-            <img src="/icons/github.svg" alt="" />
+            <img width="40" src="/icons/github.svg" alt="" />
             <h2 class="font-bold text-lg">
                 Github: <span class="link">https://github.com/rhellwege</span>
             </h2>
@@ -59,7 +59,9 @@
 
 <style>
     #main {
-        width: 70vw;
+        max-width: 700px;
+        padding-right: 20px;
+        padding-left: 20px;
     }
 
     .form-container {

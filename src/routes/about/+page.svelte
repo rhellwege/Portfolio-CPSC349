@@ -5,7 +5,7 @@
     <title>Ryan Hellwege Portfolio | About</title>
 </svelte:head>
 
-<article id="main" class="prose mx-auto text-lg">
+<article id="main" class="mx-auto text-lg">
     <h1 id="title" class="font-bold text-3xl pt-5">About</h1>
     <div class="divider"></div>
     <p>
